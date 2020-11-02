@@ -16,6 +16,7 @@ bower_components/
 
 # IDEs and editors
 .idea/
+/.idea/
 
 # misc
 .sass-cache/
@@ -175,4 +176,10 @@ buildNumber.properties
 .mvn/wrapper/maven-wrapper.jar
 
 # End of https://www.toptal.com/developers/gitignore/api/intellij,java,angular,maven
-/.idea/
+
+# Docker
+/.env
+
+# Mosquitto
+/volumes/mosquitto/log/
+/volumes/mosquitto/data/

@@ -1,0 +1,17 @@
+version: "3"
+services:
+  message-broker:
+    image: eclipse-mosquitto
+    hostname: broker
+    networks:
+      - default
+    expose:
+      - "1883"
+      - "9001"
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./volumes/mosquitto/config:/mosquitto/config
+      - ./volumes/mosquitto/data:/mosquitto/data
+      - ./volumes/mosquitto/log:/mosquitto/log
