@@ -1,5 +1,7 @@
 version: "3"
 services:
+
+  # MQTT Broker
   message-broker:
     image: eclipse-mosquitto
     hostname: broker
@@ -15,3 +17,9 @@ services:
       - ./volumes/mosquitto/config:/mosquitto/config
       - ./volumes/mosquitto/data:/mosquitto/data
       - ./volumes/mosquitto/log:/mosquitto/log
+
+  # A demo fake sensor
+  fake-sensor-demo:
+    build:
+      context: ./fake-sensor
+      dockerfile: ./Dockerfile
