@@ -33,9 +33,18 @@ class FileReplay:
 
         print("Replaying %d measurements at speed %.2f\n" % (len(self._data), replay_speed))
 
-        for index, row in self._data.iterrows():
-            print(index, row)
-            self._exit.wait(1)
+        row_iterator = self._data.iterrows()
+        last_index, last_row = row_iterator.__next__()
+        for index, row in row_iterator:
+            print(last_row)
+
+            # Calculating timeout from last index to current index
+            timeout = (index - last_index).total_seconds() / replay_speed
+
+            last_index = index
+            last_row = row
+
+            self._exit.wait(timeout)
             if self._exit.is_set():
                 return
 
