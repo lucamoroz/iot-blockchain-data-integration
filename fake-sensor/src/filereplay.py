@@ -28,12 +28,16 @@ class FileReplay:
             raise ValueError("Only .csv files are supported")
 
         df = pd.read_csv(path_to_file, index_col=time_column)
+        # Storing only required columns in memory
+        df = df[columns]
         df.index = pd.to_datetime(df.index, unit='s')
 
         if self._data is None:
             self._data = df
         else:
             self._data = self._data.append(df)
+
+        self._data = self._data.sort_index()
 
     def play(self, replay_speed: float = 1.0):
         if self._data is None:
@@ -45,7 +49,10 @@ class FileReplay:
         row_iterator = self._data.iterrows()
         last_index, last_row = row_iterator.__next__()
         for index, row in row_iterator:
-            self._publisher.publish(row)
+            # Converting row into dict before publishing
+            data_dict = last_row.to_dict()
+            data_dict.update(time=str(last_index.to_pydatetime()))
+            self._publisher.publish(data_dict)
 
             # Calculating timeout from last index to current index
             timeout = (index - last_index).total_seconds() / replay_speed

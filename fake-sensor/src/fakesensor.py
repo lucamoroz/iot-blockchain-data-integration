@@ -36,17 +36,21 @@ def setup_args_parser():
     args = arg_parser.parse_args()
 
 
+def setup_signal_handlers():
+    print("Registering signal handler")
+    signal.signal(signal.SIGTERM, sigterm_handler)
+    signal.signal(signal.SIGINT, sigterm_handler)
+
+
 if __name__ == '__main__':
     setup_args_parser()
+    setup_signal_handlers()
+
     print("Starting fake sensor")
     if args.files:
         print("Reading %d file(s)" % len(args.files))
     else:
         raise ValueError("No file paths")
-
-    print("Registering signal handler")
-    signal.signal(signal.SIGTERM, sigterm_handler)
-    signal.signal(signal.SIGINT, sigterm_handler)
 
     publisher = BasePublisher()
     file_player = FileReplay(publisher)
