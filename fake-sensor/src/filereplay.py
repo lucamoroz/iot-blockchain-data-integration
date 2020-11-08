@@ -13,7 +13,11 @@ class FileReplay:
 
     def load(self, path_to_file: str, time_column: str = "time"):
         if not os.path.isfile(path_to_file):
-            raise FileNotFoundError
+            # Fallback to also handle relative paths
+            dirname = os.path.dirname(__file__)
+            path_to_file = os.path.join(dirname, path_to_file)
+            if not os.path.isfile(path_to_file):
+                raise FileNotFoundError(path_to_file)
 
         if not path_to_file.lower().endswith(".csv"):
             raise ValueError("Only .csv files are supported")

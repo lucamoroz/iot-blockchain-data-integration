@@ -50,7 +50,11 @@ if __name__ == '__main__':
     file_player = FileReplay()
 
     for file in args.files:
-        file_player.load(file, args.time[0])
+        try:
+            file_player.load(file, args.time[0])
+        except FileNotFoundError:
+            print("File %s does not exist" % file)
+            exit(1)
 
     file_player.play(args.replay_speed[0])
 
