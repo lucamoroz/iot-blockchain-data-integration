@@ -38,7 +38,10 @@ def setup_args_parser():
 if __name__ == '__main__':
     setup_args_parser()
     print("Starting fake sensor")
-    print("Reading %d file(s)" % len(args.files))
+    if args.files:
+        print("Reading %d file(s)" % len(args.files))
+    else:
+        raise ValueError("No file paths")
 
     print("Registering signal handler")
     signal.signal(signal.SIGTERM, sigterm_handler)
@@ -46,7 +49,8 @@ if __name__ == '__main__':
 
     file_player = FileReplay()
 
-    file_player.load("/Users/Konstantin/IntelliJProjects/IOT20_Assignment/fake-sensor/data/HomeA/homeA2014.csv")
+    for file in args.files:
+        file_player.load(file, args.time)
 
     file_player.play()
 

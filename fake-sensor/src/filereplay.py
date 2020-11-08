@@ -5,32 +5,36 @@ import time
 
 
 class FileReplay:
-    _path_to_file: str
     _running: bool
     _data = None
 
     def __init__(self):
         self._running = True
 
-    def load(self, path_to_file: str):
-        self._path_to_file = path_to_file
-        if not os.path.isfile(self._path_to_file):
+    def load(self, path_to_file: str, time_column: str = "time"):
+        if not os.path.isfile(path_to_file):
             raise FileNotFoundError
 
-        if not self._path_to_file.lower().endswith(".csv"):
+        if not path_to_file.lower().endswith(".csv"):
             raise ValueError("Only .csv files are supported")
-        self._data = pd.read_csv(self._path_to_file, index_col='time')
 
-        self._data.index = pd.to_datetime(self._data.index, unit='s')
+        df = pd.read_csv(path_to_file, index_col=time_column)
+        df.index = pd.to_datetime(df.index, unit='s')
 
-    def play(self):
+        if self._data is None:
+            self._data = df
+        else:
+            self._data = self._data.append(df)
+
+    def play(self, replay_speed: float = 1.0):
         if self._data is None:
             print("No data to play\n Hint: use load(self, path_to_file: str) to load data from a csv file")
             return
 
+        print("Replaying %d measurements at speed %.2f\n" % (len(self._data), replay_speed))
+
         for index, row in self._data.iterrows():
             if not self._running:
-                print("Stopping reading from file %s" % self._path_to_file)
                 return
             print(index, row)
             time.sleep(1)
