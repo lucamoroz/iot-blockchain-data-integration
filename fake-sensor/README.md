@@ -30,7 +30,7 @@ optional arguments:
 ### Anemometer
 To emulate an anemometer publishing messages to a broker (at `127.0.0.1:1883` and topic `/homea/anemometer`) run the script with the following program arguments:
 ```shell script
-python3 fake-sensor/src/fake-sensor.py --host "127.0.0.1" --port 1883 --topic "/homea/anemometer" --columns windSpeed windBearing --replay-speed 1.0 --time "time" ../data/HomeA/homeA2014.csv ../data/HomeA/homeA2015.csv 
+python3 fake-sensor/src/fakesensor.py --host "127.0.0.1" --port 1883 --topic "/homea/anemometer" --columns windSpeed windBearing --replay-speed 1.0 --time "time" ../data/HomeA/homeA2014.csv ../data/HomeA/homeA2015.csv 
 ```
 
 The file `./data/HomeA/homeA2014.csv` contains a set of sensor measurements like temperature, humidity, windSpeed, windBearing, etc.

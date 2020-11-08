@@ -14,7 +14,7 @@ class MqttPublisher(BasePublisher):
 
     def publish(self, data: dict):
         if not self._mqtt_client.is_connected():
-            print("Connecting to broker %s:%d" % (self._host, self._port))
+            print("Connecting to broker %s:%s" % (self._host, self._port))
             self._mqtt_client.connect(self._host, self._port)
         serialized = json.dumps(data)
         print("Publishing %s to topic %s" % (str(serialized), self._topic))

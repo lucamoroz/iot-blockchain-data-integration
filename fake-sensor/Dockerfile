@@ -11,5 +11,7 @@ RUN pip install -r /app/requirements.txt
 
 COPY src/. .
 
+RUN chmod +x ./entrypoint.sh
+
 # The -u flag is important if you want to observe the logs, otherwise python buffers the output
-ENTRYPOINT [ "python", "-u", "main.py" ]
+ENTRYPOINT ["./entrypoint.sh"]

@@ -1,10 +1,9 @@
-version: "3"
+version: '3'
 services:
 
   # MQTT Broker
   message-broker:
     image: eclipse-mosquitto
-    hostname: broker
     networks:
       - default
     expose:
@@ -18,8 +17,17 @@ services:
       - ./volumes/mosquitto/data:/mosquitto/data
       - ./volumes/mosquitto/log:/mosquitto/log
 
-  # A demo fake sensor
-  fake-sensor-demo:
+  # A demo fake sensor (Anemometer)
+  fake-anemometer:
     build:
       context: ./fake-sensor
       dockerfile: ./Dockerfile
+    environment:
+      - HOST=message-broker
+      - PORT=1883
+      - TOPIC=/homea/anemometer
+      - REPLAY_SPEED=720.0
+      - COLUMNS=windSpeed windBearing
+      - FILES=./data/HomeA/homeA2014.csv ./data/HomeA/homeA2015.csv
+    volumes:
+      - ./fake-sensor/data:/app/data
