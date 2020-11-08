@@ -1,17 +1,22 @@
 import os.path
 from threading import Event
+from typing import List
 
 import pandas as pd
+
+from basepublisher import BasePublisher
 
 
 class FileReplay:
     _exit: Event
+    _publisher: BasePublisher
     _data = None
 
-    def __init__(self):
+    def __init__(self, publisher: BasePublisher):
+        self._publisher = publisher
         self._exit = Event()
 
-    def load(self, path_to_file: str, time_column: str = "time"):
+    def load(self, path_to_file: str, columns: List[str], time_column: str = "time"):
         if not os.path.isfile(path_to_file):
             # Fallback to also handle relative paths
             dirname = os.path.dirname(__file__)
@@ -40,7 +45,7 @@ class FileReplay:
         row_iterator = self._data.iterrows()
         last_index, last_row = row_iterator.__next__()
         for index, row in row_iterator:
-            print(last_row)
+            self._publisher.publish(row)
 
             # Calculating timeout from last index to current index
             timeout = (index - last_index).total_seconds() / replay_speed

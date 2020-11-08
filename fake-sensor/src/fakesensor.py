@@ -1,6 +1,7 @@
 import argparse
 import signal
 
+from basepublisher import BasePublisher
 from filereplay import FileReplay
 
 file_player: FileReplay
@@ -17,7 +18,7 @@ def sigterm_handler(_signo, _stack_frame):
 def setup_args_parser():
     global arg_parser
     global args
-    arg_parser = argparse.ArgumentParser(description='Send data from a csv file to a MQTT broker')
+    arg_parser = argparse.ArgumentParser(description='Send data from a csv file to a topic in an MQTT broker')
     arg_parser.add_argument('files', metavar='FILE', type=str, nargs='+',
                             help='file names of csv file data will be read from')
     arg_parser.add_argument('--host', type=str, nargs=1, required=True,
@@ -47,11 +48,12 @@ if __name__ == '__main__':
     signal.signal(signal.SIGTERM, sigterm_handler)
     signal.signal(signal.SIGINT, sigterm_handler)
 
-    file_player = FileReplay()
+    publisher = BasePublisher()
+    file_player = FileReplay(publisher)
 
     for file in args.files:
         try:
-            file_player.load(file, args.time[0])
+            file_player.load(file, args.columns, args.time[0])
         except FileNotFoundError:
             print("File %s does not exist" % file)
             exit(1)

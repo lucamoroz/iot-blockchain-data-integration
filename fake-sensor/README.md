@@ -8,7 +8,7 @@ The fake sensor programm can be used to emulate an IoT device (eg. [Anemometer](
 ```
 usage: fake-sensor.py [-h] --host HOST [--port PORT] --topic TOPIC --columns COLUMNS [COLUMNS ...] [--replay-speed REPLAY_SPEED] [--time TIME] FILE [FILE ...]
 
-Send data from a csv file to a MQTT broker
+Send data from a csv file to a topic in an MQTT broker
 
 positional arguments:
   FILE                  file names of csv file data will be read from
