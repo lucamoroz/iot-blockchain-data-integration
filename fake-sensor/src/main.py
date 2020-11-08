@@ -50,8 +50,8 @@ if __name__ == '__main__':
     file_player = FileReplay()
 
     for file in args.files:
-        file_player.load(file, args.time)
+        file_player.load(file, args.time[0])
 
-    file_player.play()
+    file_player.play(args.replay_speed[0])
 
     print("[end of program]")

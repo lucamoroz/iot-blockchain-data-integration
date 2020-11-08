@@ -1,15 +1,15 @@
 import os.path
+from threading import Event
 
 import pandas as pd
-import time
 
 
 class FileReplay:
-    _running: bool
+    _exit: Event
     _data = None
 
     def __init__(self):
-        self._running = True
+        self._exit = Event()
 
     def load(self, path_to_file: str, time_column: str = "time"):
         if not os.path.isfile(path_to_file):
@@ -34,11 +34,11 @@ class FileReplay:
         print("Replaying %d measurements at speed %.2f\n" % (len(self._data), replay_speed))
 
         for index, row in self._data.iterrows():
-            if not self._running:
-                return
             print(index, row)
-            time.sleep(1)
+            self._exit.wait(1)
+            if self._exit.is_set():
+                return
 
     def stop(self):
-        self._running = False
+        self._exit.set()
         print("Will stop playing after sleep cycle")
