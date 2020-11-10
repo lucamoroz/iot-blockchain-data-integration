@@ -11,10 +11,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Component;
-import tuwien.models.WeatherRecord;
+import tuwien.models.AnemometerRecord;
 
 @Component
-public class MQTTWeather implements CommandLineRunner, IMqttMessageListener {
+public class MQTTAnemometer implements CommandLineRunner, IMqttMessageListener {
 
     @Autowired
     TaskExecutor executor;
@@ -22,51 +22,51 @@ public class MQTTWeather implements CommandLineRunner, IMqttMessageListener {
     @Autowired
     MqttClient mqttClient;
 
-    @Value("${weatherTopic}")
-    private String weatherTopic;
+    @Value("${anemometerTopic}")
+    private String anemometerTopic;
 
-    @Value("${weatherFilteredTopic}")
-    private String weatherFilteredTopic;
+    @Value("${anemometerFilteredTopic}")
+    private String anemometerFilteredTopic;
 
     // Executed after all beans have been initialized
     @Override
     public void run(String... args) {
         executor.execute(() -> {
+            // Subscribe to electrical data topic
             try {
-                mqttClient.subscribe(weatherTopic, this);
-                System.out.println("Subscribed to " + weatherTopic);
+                mqttClient.subscribe(anemometerTopic, this);
+                System.out.println("Subscribed to " + anemometerTopic);
             } catch (MqttException e) {
-                throw new RuntimeException("Unable to subscribe to " + weatherTopic + ": " + e.getMessage());
+                throw new RuntimeException("Unable to subscribe to " + anemometerTopic + ": " + e.getMessage());
             }
+
         });
     }
 
     @Override
     public void messageArrived(String topic, MqttMessage message) {
-        if (!topic.equals(weatherTopic)) return;
-
         ObjectMapper mapper = new ObjectMapper();
-        WeatherRecord wr;
+        AnemometerRecord ar;
         try {
             String json = new String(message.getPayload());
-            wr = mapper.readValue(json, WeatherRecord.class);
+            ar = mapper.readValue(json, AnemometerRecord.class);
         } catch (JsonProcessingException e) {
-            System.out.println("Couldn't parse: " + message.toString());
+            System.out.println("Couldn't parse: " + message.toString() + " - Error: " + e.getMessage());
             return;
         }
-        System.out.println("Received: " + wr.toString());
+        System.out.println("Received: " + ar.toString());
 
-        if (isToFilter(wr)) return;
+        if (isToFilter(ar)) return;
 
         message.setQos(2);
         try {
-            mqttClient.publish(weatherFilteredTopic, message);
+            mqttClient.publish(anemometerFilteredTopic, message);
         } catch (MqttException e) {
             System.out.println("Unable to forward message: " + e.getMessage());
         }
     }
 
-    private boolean isToFilter(WeatherRecord record) {
+    private boolean isToFilter(AnemometerRecord record) {
         // TODO
         return false;
     }
