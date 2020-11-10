@@ -33,12 +33,8 @@ The frontend will be use [Angular](https://angular.io/) as a framework.
 
 TODO
 
-## Requirements
-- Maven 
-
 ## How to run
 `$make start`
-
 
 ## How to debug
 

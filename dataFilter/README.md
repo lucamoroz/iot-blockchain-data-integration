@@ -1,7 +1,7 @@
 
 ## Build
 - With docker:
-`mvn -f pom.xml package && sudo docker build -t tuwien/iot .`
+`sudo docker build -t tuwien/iot .`
 - With Maven:
 `sudo ./mvnw spring-boot:build-image -Dspring-boot.build-image.imageName=tuwien/iot`
 
