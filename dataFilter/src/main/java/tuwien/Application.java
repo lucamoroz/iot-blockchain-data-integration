@@ -39,7 +39,7 @@ public class Application implements MqttCallback {
 	@Bean
 	MqttClient mqttClient() {
 		try {
-			MqttClient client = new MqttClient(broker, "electrical filter", new MemoryPersistence());
+			MqttClient client = new MqttClient(broker, "filter", new MemoryPersistence());
 
 			MqttConnectOptions options = new MqttConnectOptions();
 			// TODO which type of session?
@@ -47,6 +47,8 @@ public class Application implements MqttCallback {
 			options.setAutomaticReconnect(true);
 			client.setCallback(this);
 			client.connect(options);
+
+			System.out.println("Connected to: " + broker);
 
 			return client;
 		} catch (MqttException e) {

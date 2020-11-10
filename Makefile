@@ -1,5 +1,5 @@
 start:
-	docker-compose build && docker-compose up -d
+	mvn -f dataFilter/pom.xml package && docker-compose build && docker-compose up -d
 
 restart:
 	docker-compose restart
