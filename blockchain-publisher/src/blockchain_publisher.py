@@ -57,7 +57,7 @@ def parse_args():
     arg_parser.add_argument('--blockchain-host', type=str, required=True,
                             help='the hostname of the Blockchain where the data will be published to')
     arg_parser.add_argument('--contract-sol-path', type=str,
-                            help='the file path to the source file of the contract in use')
+                            help='the file path to the source file of the contract in use. Note: Either contract-abi-path and contract-address must be given or the contract-sol-path. If only the source path is given, the program will deploy the contract first to the blockchain.')
     arg_parser.add_argument('--contract-abi-path', type=str,
                             help='the file path to the abi file of the contract in use')
     arg_parser.add_argument('--contract-address', type=str,
@@ -81,9 +81,11 @@ def main():
     # Deploy if no ABI or address is given
     if contract_abi_path is None or contract_address is None:
         if contract_sol_path:
-            contract_address, contract_abi = deploy_contract(blockchain_host, contract_sol_path)
+            contract_address, contract_abi = deploy_contract(
+                blockchain_host, contract_sol_path)
         else:
-            print('Either contract_abi_path and contract_address must be given or the contract_sol_path!')
+            print(
+                'Either contract-abi-path and contract-address must be given or the contract-sol-path!')
             sys.exit(1)
     else:
         with open(contract_abi_path, 'r') as f:
