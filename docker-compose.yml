@@ -28,6 +28,8 @@ services:
       - TOPIC=/homea/anemometer
       - REPLAY_SPEED=720.0
       - COLUMNS=windSpeed windBearing
+      - KEEP_CONNECTION=10
+      - CLIENT_ID=anemometer-1
       - FILES=./data/HomeA/homeA2014.csv ./data/HomeA/homeA2015.csv
     volumes:
       - ./fake-sensor/data:/app/data

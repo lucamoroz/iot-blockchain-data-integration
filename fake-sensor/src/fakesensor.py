@@ -39,6 +39,11 @@ def setup_args_parser():
     arg_parser.add_argument('--print-only', type=bool, nargs=1, default=[False],
                             help='only prints the messages to stdout instead of publishing to a topic (no broker '
                                  'required)')
+    arg_parser.add_argument('--keep-connection', type=int, nargs=1, default=[5],
+                            help='if the next data value will be published within this interval, the connection to '
+                                 'the MQTT broker will not be disconnected')
+    arg_parser.add_argument('--client-id', type=str, nargs=1, required=True,
+                            help='the client id used to connect to the MQTT broker')
     args = arg_parser.parse_args()
 
 
@@ -62,7 +67,7 @@ if __name__ == '__main__':
     if args.print_only[0]:
         publisher = BasePublisher()
     else:
-        publisher = MqttPublisher(args.host[0], args.port[0], args.topic[0])
+        publisher = MqttPublisher(args.host[0], args.port[0], args.topic[0], args.keep_connection[0], args.client_id[0])
 
     file_player = FileReplay(publisher)
 
