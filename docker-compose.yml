@@ -26,9 +26,9 @@ services:
       - HOST=message-broker
       - PORT=1883
       - TOPIC=/homea/anemometer
-      - REPLAY_SPEED=720.0
+      - REPLAY_SPEED=360.0
       - COLUMNS=windSpeed windBearing
-      - KEEP_CONNECTION=10
+      - KEEP_CONNECTION=5
       - CLIENT_ID=anemometer-1
       - FILES=./data/HomeA/homeA2014.csv ./data/HomeA/homeA2015.csv
     volumes:

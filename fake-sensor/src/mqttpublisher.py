@@ -1,6 +1,7 @@
 import json
 
 import paho.mqtt.client as mqtt
+import time
 
 from basepublisher import BasePublisher
 
@@ -14,10 +15,8 @@ class MqttPublisher(BasePublisher):
         self._mqtt_client = mqtt.Client(client_id)
 
     def publish(self, data: dict, next_in_seconds: int = None):
-        if not self._mqtt_client.is_connected():
-            print("Connecting to broker %s:%s" % (self._host, self._port))
-            self._mqtt_client.connect(self._host, self._port)
-            self._mqtt_client.loop_start()
+        self.connect_client()
+
         serialized = json.dumps(data)
         print("Publishing %s to topic %s" % (str(serialized), self._topic))
         self._mqtt_client.publish(self._topic, serialized)
@@ -31,6 +30,23 @@ class MqttPublisher(BasePublisher):
 
     def shutdown(self):
         self.disconnect_client()
+
+    def connect_client(self):
+        if not self._mqtt_client.is_connected():
+            print("Connecting to broker %s:%s" % (self._host, self._port))
+            self._mqtt_client.connect(self._host, self._port)
+            self._mqtt_client.loop_start()
+
+        # Waiting for connection to be successful
+        wait_count = 0.0
+        while not self._mqtt_client.is_connected():
+            wait_count += 1
+            sleep_interval = 0.1
+            # Raising exception if waiting too long
+            if wait_count * sleep_interval > 5:
+                raise ConnectionAbortedError("Failed to connect for %d seconds" % (wait_count * sleep_interval))
+            time.sleep(sleep_interval)
+            print('Waiting for connection...')
 
     def disconnect_client(self):
         if self._mqtt_client.is_connected():
