@@ -17,21 +17,25 @@ class MqttPublisher(BasePublisher):
         if not self._mqtt_client.is_connected():
             print("Connecting to broker %s:%s" % (self._host, self._port))
             self._mqtt_client.connect(self._host, self._port)
+            self._mqtt_client.loop_start()
         serialized = json.dumps(data)
         print("Publishing %s to topic %s" % (str(serialized), self._topic))
         self._mqtt_client.publish(self._topic, serialized)
 
         if next_in_seconds is None:
-            print('Disconnecting from MQTT broker')
-            self._mqtt_client.disconnect()
+            self.disconnect_client()
         elif next_in_seconds > self._keep_connection:
-            self._mqtt_client.disconnect()
+            self.disconnect_client()
         else:
             print('Keeping connection, next value expected in %d seconds' % next_in_seconds)
 
     def shutdown(self):
+        self.disconnect_client()
+
+    def disconnect_client(self):
         if self._mqtt_client.is_connected():
             print('Disconnecting from MQTT broker')
+            self._mqtt_client.loop_stop()
             self._mqtt_client.disconnect()
         else:
             print('Already disconnected')
