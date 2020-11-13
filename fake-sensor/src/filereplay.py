@@ -49,19 +49,21 @@ class FileReplay:
         row_iterator = self._data.iterrows()
         last_index, last_row = row_iterator.__next__()
         for index, row in row_iterator:
-            # Converting row into dict before publishing
-            data_dict = last_row.to_dict()
-            data_dict.update(time=str(last_index.to_pydatetime()))
-            self._publisher.publish(data_dict)
-
             # Calculating timeout from last index to current index
             timeout = (index - last_index).total_seconds() / replay_speed
 
+            # Converting row into dict before publishing
+            data_dict = last_row.to_dict()
+            data_dict.update(time=str(last_index.to_pydatetime()))
+            self._publisher.publish(data_dict, timeout)
+
+            # Setting current values to be published next
             last_index = index
             last_row = row
 
             self._exit.wait(timeout)
             if self._exit.is_set():
+                self._publisher.shutdown()
                 return
 
     def stop(self):
