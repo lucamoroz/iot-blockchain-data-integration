@@ -29,6 +29,26 @@ services:
       - ./volumes/mosquitto/data:/mosquitto/data
       - ./volumes/mosquitto/log:/mosquitto/log
 
+  blockchain-publisher:
+    build:
+      context: ./blockchain-publisher
+    environment:
+      - MQTT_HOST=message-broker
+      - MQTT_PORT=1883
+      - MQTT_TOPIC=mytopic
+      - BLOCKCHAIN_HOST=ganache:8545
+      - CONTRACT_ADDRESS=0x115ef9182119d2969d24635abf49AA997c21EB4a
+    depends_on:
+      - message-broker
+      - ganache
+  
+  ganache:
+    image: trufflesuite/ganache-cli
+    expose:
+      - 8545
+    ports:
+      - 8545:8545    
+
   # A demo fake sensor (Anemometer)
   fake-anemometer:
     build:
