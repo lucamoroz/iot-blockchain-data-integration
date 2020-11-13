@@ -34,8 +34,7 @@ The frontend will be use [Angular](https://angular.io/) as a framework.
 TODO
 
 ## How to run
-
-TODO
+`$make start`
 
 ## How to debug
 
