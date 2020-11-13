@@ -1,6 +1,18 @@
 version: '3'
 services:
 
+  # Data Filter
+  data-filer:
+    build:
+      context: ./dataFilter
+      dockerfile: ./Dockerfile
+    networks:
+      - default
+    expose:
+      - "8080"
+    ports:
+      - "8080:8080"
+
   # MQTT Broker
   message-broker:
     image: eclipse-mosquitto
