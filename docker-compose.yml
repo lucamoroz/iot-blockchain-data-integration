@@ -37,7 +37,6 @@ services:
       - MQTT_PORT=1883
       - MQTT_TOPIC=mytopic
       - BLOCKCHAIN_HOST=ganache:8545
-      - CONTRACT_ADDRESS=0x115ef9182119d2969d24635abf49AA997c21EB4a
     depends_on:
       - message-broker
       - ganache

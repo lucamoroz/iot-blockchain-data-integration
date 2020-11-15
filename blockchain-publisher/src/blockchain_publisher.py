@@ -29,14 +29,8 @@ class BlockchainPublisher:
 
     def handle_message(self, client, userdata, msg):
         print(f'[{datetime.datetime.now()}] {msg.topic} {msg.payload}', end='')
-
-        # TODO Probably better to stay in binary
-        # Decode message
-        decoded = msg.payload.decode('ascii')
-        decoded = decoded.strip('"]["').split('", "')
-
-        tx_hash = self._contract.functions.addDataItem(
-            *tuple(decoded)).transact()
+    
+        tx_hash = self._contract.functions.addDataItem(msg.payload).transact()
         tx_receipt = self._w3.eth.waitForTransactionReceipt(tx_hash)
         print(f' -> {tx_receipt.gasUsed} {tx_receipt.transactionHash.hex()}')
 
