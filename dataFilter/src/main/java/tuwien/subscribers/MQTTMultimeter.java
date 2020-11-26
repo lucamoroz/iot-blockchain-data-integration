@@ -13,8 +13,11 @@ import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Component;
 import tuwien.models.MultimeterRecord;
 
+import java.util.logging.Logger;
+
 @Component
 public class MQTTMultimeter implements CommandLineRunner, IMqttMessageListener {
+    private final static Logger LOGGER = Logger.getLogger(MQTTMultimeter.class.getName());
 
     @Autowired
     TaskExecutor executor;
@@ -34,7 +37,7 @@ public class MQTTMultimeter implements CommandLineRunner, IMqttMessageListener {
         executor.execute(() -> {
             try {
                 mqttClient.subscribe(multimeterTopic, this);
-                System.out.println("Subscribed to " + multimeterTopic);
+                LOGGER.info("Subscribed to " + multimeterTopic);
             } catch (MqttException e) {
                 throw new RuntimeException("Unable to subscribe to " + multimeterTopic + ": " + e.getMessage());
             }
@@ -49,10 +52,10 @@ public class MQTTMultimeter implements CommandLineRunner, IMqttMessageListener {
             String json = new String(message.getPayload());
             wr = mapper.readValue(json, MultimeterRecord.class);
         } catch (JsonProcessingException e) {
-            System.out.println("Couldn't parse: " + message.toString() + " - Error: " + e.getMessage());
+            LOGGER.severe(String.format("Couldn't parse: %s - Error: %s", message.toString(), e.getMessage()));
             return;
         }
-        System.out.println("Received: " + wr.toString());
+        LOGGER.info("Received: " + wr.toString());
 
         if (isToFilter(wr)) return;
 
@@ -60,7 +63,7 @@ public class MQTTMultimeter implements CommandLineRunner, IMqttMessageListener {
         try {
             mqttClient.publish(multimeterFilteredTopic, message);
         } catch (MqttException e) {
-            System.out.println("Unable to forward message: " + e.getMessage());
+            LOGGER.severe("Unable to forward message: " + e.getMessage());
         }
     }
 

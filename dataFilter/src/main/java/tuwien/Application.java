@@ -11,9 +11,11 @@ import org.springframework.core.task.SyncTaskExecutor;
 import org.springframework.core.task.TaskExecutor;
 
 import javax.annotation.PreDestroy;
+import java.util.logging.Logger;
 
 @SpringBootApplication
 public class Application implements MqttCallback {
+	private final static Logger LOGGER = Logger.getLogger(Application.class.getName());
 
 	@Value("${broker}")
 	private String broker;
@@ -48,7 +50,7 @@ public class Application implements MqttCallback {
 			client.setCallback(this);
 			client.connect(options);
 
-			System.out.println("Connected to: " + broker);
+			LOGGER.info("Connected to: " + broker);
 
 			return client;
 		} catch (MqttException e) {
@@ -58,7 +60,7 @@ public class Application implements MqttCallback {
 
 	@Override
 	public void connectionLost(Throwable cause) {
-		System.out.println("MQTT connection lost: " + cause.getMessage());
+		LOGGER.info("MQTT connection lost: " + cause.getMessage());
 	}
 
 	@Override
@@ -73,7 +75,7 @@ public class Application implements MqttCallback {
 
 	@PreDestroy
 	public void destroy() throws Exception {
-		System.out.println("Closing...");
+		LOGGER.info("Closing...");
 		mqttClient.disconnect();
 		mqttClient.close();
 	}

@@ -10,8 +10,12 @@ import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Component;
 import tuwien.models.ElectricalRecord;
 
+import java.util.logging.Logger;
+
 @Component
 public class MQTTElectrical implements CommandLineRunner, IMqttMessageListener {
+
+    private final static Logger LOGGER = Logger.getLogger(MQTTElectrical.class.getName());
 
     @Autowired
     TaskExecutor executor;
@@ -32,7 +36,8 @@ public class MQTTElectrical implements CommandLineRunner, IMqttMessageListener {
             // Subscribe to electrical data topic
             try {
                 mqttClient.subscribe(electricalTopic, this);
-                System.out.println("Subscribed to " + electricalTopic);
+                LOGGER.info("Subscribed to " + electricalTopic);
+
             } catch (MqttException e) {
                 throw new RuntimeException("Unable to subscribe to " + electricalTopic + ": " + e.getMessage());
             }
@@ -49,10 +54,10 @@ public class MQTTElectrical implements CommandLineRunner, IMqttMessageListener {
             String json = new String(message.getPayload());
             er = mapper.readValue(json, ElectricalRecord.class);
         } catch (JsonProcessingException e) {
-            System.out.println("Couldn't parse: " + message.toString() + " - Error: " + e.getMessage());
+            LOGGER.severe(String.format("Couldn't parse: %s - Error: %s", message.toString(), e.getMessage()));
             return;
         }
-        System.out.println("Received: " + er.toString());
+        LOGGER.info("Received: " + er.toString());
 
         if (isToFilter(er)) return;
 
@@ -60,7 +65,7 @@ public class MQTTElectrical implements CommandLineRunner, IMqttMessageListener {
         try {
             mqttClient.publish(electricalFilteredTopic, message);
         } catch (MqttException e) {
-            System.out.println("Unable to forward message: " + e.getMessage());
+            LOGGER.severe("Unable to forward message: " + e.getMessage());
         }
     }
 

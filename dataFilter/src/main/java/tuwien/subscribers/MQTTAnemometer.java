@@ -13,8 +13,11 @@ import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Component;
 import tuwien.models.AnemometerRecord;
 
+import java.util.logging.Logger;
+
 @Component
 public class MQTTAnemometer implements CommandLineRunner, IMqttMessageListener {
+    private final static Logger LOGGER = Logger.getLogger(MQTTAnemometer.class.getName());
 
     @Autowired
     TaskExecutor executor;
@@ -35,7 +38,7 @@ public class MQTTAnemometer implements CommandLineRunner, IMqttMessageListener {
             // Subscribe to electrical data topic
             try {
                 mqttClient.subscribe(anemometerTopic, this);
-                System.out.println("Subscribed to " + anemometerTopic);
+                LOGGER.info("Subscribed to " + anemometerTopic);
             } catch (MqttException e) {
                 throw new RuntimeException("Unable to subscribe to " + anemometerTopic + ": " + e.getMessage());
             }
@@ -51,10 +54,10 @@ public class MQTTAnemometer implements CommandLineRunner, IMqttMessageListener {
             String json = new String(message.getPayload());
             ar = mapper.readValue(json, AnemometerRecord.class);
         } catch (JsonProcessingException e) {
-            System.out.println("Couldn't parse: " + message.toString() + " - Error: " + e.getMessage());
+            LOGGER.severe(String.format("Couldn't parse: %s - Error: %s", message.toString(), e.getMessage()));
             return;
         }
-        System.out.println("Received: " + ar.toString());
+        LOGGER.info("Received: " + ar.toString());
 
         if (isToFilter(ar)) return;
 
@@ -62,7 +65,7 @@ public class MQTTAnemometer implements CommandLineRunner, IMqttMessageListener {
         try {
             mqttClient.publish(anemometerFilteredTopic, message);
         } catch (MqttException e) {
-            System.out.println("Unable to forward message: " + e.getMessage());
+            LOGGER.severe("Unable to forward message: " + e.getMessage());
         }
     }
 

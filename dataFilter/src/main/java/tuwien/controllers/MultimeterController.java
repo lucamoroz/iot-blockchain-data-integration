@@ -6,9 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import tuwien.filters.MultimeterFilter;
 
+import java.util.logging.Logger;
+
 @RestController
 @RequestMapping("/filters/multimeter/")
 public class MultimeterController {
+    private final static Logger LOGGER = Logger.getLogger(MultimeterController.class.getName());
 
     @Autowired
     MultimeterFilter filter;
@@ -42,13 +45,13 @@ public class MultimeterController {
 
     @PostMapping("")
     MultimeterFilter updateMultimeterFilter(@RequestBody String body) {
-        System.out.println(body);
+        LOGGER.info(String.format("updateMultimeterFilter received %s", body));
         ObjectMapper mapper = new ObjectMapper();
         try {
             MultimeterFilter newFilter = mapper.readValue(body, MultimeterFilter.class);
             filter.update(newFilter);
         } catch (JsonProcessingException e) {
-            System.out.println("Couldn't parse: " + body + " - Error: " + e.getMessage());
+            LOGGER.severe(String.format("Couldn't parse: %s - Error: %s", body, e.getMessage()));
         }
         return filter;
     }
