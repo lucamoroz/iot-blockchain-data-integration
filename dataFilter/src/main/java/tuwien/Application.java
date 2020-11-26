@@ -42,7 +42,7 @@ public class Application implements MqttCallback {
 			MqttClient client = new MqttClient(broker, "filter", new MemoryPersistence());
 
 			MqttConnectOptions options = new MqttConnectOptions();
-			// TODO which type of session?
+
 			options.setCleanSession(false);
 			options.setAutomaticReconnect(true);
 			client.setCallback(this);

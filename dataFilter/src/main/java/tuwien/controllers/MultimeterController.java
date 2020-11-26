@@ -42,7 +42,6 @@ public class MultimeterController {
 
     @PostMapping("")
     MultimeterFilter updateMultimeterFilter(@RequestBody String body) {
-        // todo update filter
         System.out.println(body);
         ObjectMapper mapper = new ObjectMapper();
         try {
@@ -50,7 +49,6 @@ public class MultimeterController {
             filter.update(newFilter);
         } catch (JsonProcessingException e) {
             System.out.println("Couldn't parse: " + body + " - Error: " + e.getMessage());
-            //return;
         }
         return filter;
     }
