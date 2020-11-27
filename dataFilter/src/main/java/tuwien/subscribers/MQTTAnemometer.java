@@ -9,6 +9,7 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.env.Environment;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Component;
 import tuwien.filters.AnemometerFilter;
@@ -29,17 +30,15 @@ public class MQTTAnemometer implements CommandLineRunner, IMqttMessageListener {
     @Autowired
     AnemometerFilter filter;
 
-    @Value("${anemometerTopic}")
-    private String anemometerTopic;
-
-    @Value("${anemometerFilteredTopic}")
-    private String anemometerFilteredTopic;
+    @Autowired
+    private Environment environment;
 
     // Executed after all beans have been initialized
     @Override
     public void run(String... args) {
         executor.execute(() -> {
             // Subscribe to electrical data topic
+            String anemometerTopic = environment.getRequiredProperty("MQTT_ANEMOMETER_TOPIC");
             try {
                 mqttClient.subscribe(anemometerTopic, this);
                 LOGGER.info("Subscribed to " + anemometerTopic);
@@ -52,6 +51,8 @@ public class MQTTAnemometer implements CommandLineRunner, IMqttMessageListener {
 
     @Override
     public void messageArrived(String topic, MqttMessage message) {
+        String anemometerFilteredTopic = environment.getRequiredProperty("MQTT_ANEMOMETER_FILTERED_TOPIC");
+
         ObjectMapper mapper = new ObjectMapper();
         AnemometerRecord ar;
         try {
@@ -66,7 +67,7 @@ public class MQTTAnemometer implements CommandLineRunner, IMqttMessageListener {
             LOGGER.info("Filtered: " + ar.toString());
             return;
         } else {
-            LOGGER.info("Publishing: " + ar.toString());
+            LOGGER.info(String.format("Publishing to topic %s: %s", anemometerFilteredTopic, ar.toString()));
         }
 
         message.setQos(2);

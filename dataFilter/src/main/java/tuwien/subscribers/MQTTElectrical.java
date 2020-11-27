@@ -4,8 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.eclipse.paho.client.mqttv3.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.env.Environment;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Component;
 import tuwien.models.ElectricalRecord;
@@ -23,17 +23,15 @@ public class MQTTElectrical implements CommandLineRunner, IMqttMessageListener {
     @Autowired
     MqttClient mqttClient;
 
-    @Value("${electricalTopic}")
-    private String electricalTopic;
-
-    @Value("${electricalFilteredTopic}")
-    private String electricalFilteredTopic;
+    @Autowired
+    private Environment environment;
 
     // Executed after all beans have been initialized
     @Override
     public void run(String... args) {
         executor.execute(() -> {
             // Subscribe to electrical data topic
+            String electricalTopic = environment.getRequiredProperty("MQTT_ELECTRICAL_TOPIC");
             try {
                 mqttClient.subscribe(electricalTopic, this);
                 LOGGER.info("Subscribed to " + electricalTopic);
@@ -47,6 +45,7 @@ public class MQTTElectrical implements CommandLineRunner, IMqttMessageListener {
 
     @Override
     public void messageArrived(String topic, MqttMessage message) {
+        String electricalFilteredTopic = environment.getRequiredProperty("MQTT_ELECTRICAL_FILTERED_TOPIC");
 
         ObjectMapper mapper = new ObjectMapper();
         ElectricalRecord er;
@@ -62,7 +61,7 @@ public class MQTTElectrical implements CommandLineRunner, IMqttMessageListener {
             LOGGER.info("Filtered: " + er.toString());
             return;
         } else {
-            LOGGER.info("Publishing: " + er.toString());
+            LOGGER.info(String.format("Publishing to topic %s: %s", electricalFilteredTopic, er.toString()));
         }
 
         message.setQos(2);

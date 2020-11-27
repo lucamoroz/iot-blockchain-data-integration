@@ -3,10 +3,10 @@ package tuwien;
 import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.env.Environment;
 import org.springframework.core.task.SyncTaskExecutor;
 import org.springframework.core.task.TaskExecutor;
 
@@ -17,8 +17,8 @@ import java.util.logging.Logger;
 public class Application implements MqttCallback {
 	private final static Logger LOGGER = Logger.getLogger(Application.class.getName());
 
-	@Value("${broker}")
-	private String broker;
+	@Autowired
+	private Environment environment;
 
 	@Autowired
 	MqttClient mqttClient;
@@ -41,13 +41,15 @@ public class Application implements MqttCallback {
 	@Bean
 	MqttClient mqttClient() {
 		try {
-			MqttClient client = new MqttClient(broker, "filter", new MemoryPersistence());
+			String broker = environment.getRequiredProperty("MQTT_HOST");
+			MqttClient client = new MqttClient("tcp://" + broker, "filter", new MemoryPersistence());
 
 			MqttConnectOptions options = new MqttConnectOptions();
 
 			options.setCleanSession(false);
 			options.setAutomaticReconnect(true);
 			client.setCallback(this);
+			LOGGER.info("Connecting to: " + broker);
 			client.connect(options);
 
 			LOGGER.info("Connected to: " + broker);
