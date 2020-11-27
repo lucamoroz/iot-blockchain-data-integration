@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Component;
+import tuwien.filters.MultimeterFilter;
 import tuwien.models.MultimeterRecord;
 
 import java.util.logging.Logger;
@@ -24,6 +25,9 @@ public class MQTTMultimeter implements CommandLineRunner, IMqttMessageListener {
 
     @Autowired
     MqttClient mqttClient;
+
+    @Autowired
+    MultimeterFilter filter;
 
     @Value("${multimeterTopic}")
     private String multimeterTopic;
@@ -55,9 +59,13 @@ public class MQTTMultimeter implements CommandLineRunner, IMqttMessageListener {
             LOGGER.severe(String.format("Couldn't parse: %s - Error: %s", message.toString(), e.getMessage()));
             return;
         }
-        LOGGER.info("Received: " + wr.toString());
 
-        if (isToFilter(wr)) return;
+        if (isToFilter(wr)) {
+            LOGGER.info("Filtered: " + wr.toString());
+            return;
+        } else {
+            LOGGER.info("Publishing: " + wr.toString());
+        }
 
         message.setQos(2);
         try {
@@ -68,7 +76,6 @@ public class MQTTMultimeter implements CommandLineRunner, IMqttMessageListener {
     }
 
     private boolean isToFilter(MultimeterRecord record) {
-        // TODO
-        return false;
+        return filter.isToFilter(record);
     }
 }

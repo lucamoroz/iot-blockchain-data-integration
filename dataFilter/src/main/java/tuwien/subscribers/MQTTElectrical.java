@@ -57,9 +57,13 @@ public class MQTTElectrical implements CommandLineRunner, IMqttMessageListener {
             LOGGER.severe(String.format("Couldn't parse: %s - Error: %s", message.toString(), e.getMessage()));
             return;
         }
-        LOGGER.info("Received: " + er.toString());
 
-        if (isToFilter(er)) return;
+        if (isToFilter(er)) {
+            LOGGER.info("Filtered: " + er.toString());
+            return;
+        } else {
+            LOGGER.info("Publishing: " + er.toString());
+        }
 
         message.setQos(2);
         try {

@@ -1,6 +1,5 @@
 package tuwien.filters;
 
-import lombok.Data;
 import org.springframework.stereotype.Component;
 import tuwien.filters.utils.Comparison;
 import tuwien.filters.utils.Filter;
@@ -21,10 +20,10 @@ public class MultimeterFilter {
         pressureConstraint = new NumberConstraint(5, Comparison.GREATER);
     }
 
-    public boolean filter(MultimeterRecord record) {
-        return Filter.checkNumberConstraint(temperatureConstraint, record.getTemperature())
-                || Filter.checkNumberConstraint(humidityConstraint, record.getHumidity())
-                || Filter.checkNumberConstraint(pressureConstraint, record.getPressure());
+    public boolean isToFilter(MultimeterRecord record) {
+        return !Filter.isNumberConstraintValid(temperatureConstraint, record.getTemperature())
+                || !Filter.isNumberConstraintValid(humidityConstraint, record.getHumidity())
+                || !Filter.isNumberConstraintValid(pressureConstraint, record.getPressure());
     }
 
     public synchronized void update(MultimeterFilter newFilter) {

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Component;
+import tuwien.filters.AnemometerFilter;
 import tuwien.models.AnemometerRecord;
 
 import java.util.logging.Logger;
@@ -24,6 +25,9 @@ public class MQTTAnemometer implements CommandLineRunner, IMqttMessageListener {
 
     @Autowired
     MqttClient mqttClient;
+
+    @Autowired
+    AnemometerFilter filter;
 
     @Value("${anemometerTopic}")
     private String anemometerTopic;
@@ -57,9 +61,13 @@ public class MQTTAnemometer implements CommandLineRunner, IMqttMessageListener {
             LOGGER.severe(String.format("Couldn't parse: %s - Error: %s", message.toString(), e.getMessage()));
             return;
         }
-        LOGGER.info("Received: " + ar.toString());
 
-        if (isToFilter(ar)) return;
+        if (isToFilter(ar)) {
+            LOGGER.info("Filtered: " + ar.toString());
+            return;
+        } else {
+            LOGGER.info("Publishing: " + ar.toString());
+        }
 
         message.setQos(2);
         try {
@@ -70,7 +78,6 @@ public class MQTTAnemometer implements CommandLineRunner, IMqttMessageListener {
     }
 
     private boolean isToFilter(AnemometerRecord record) {
-        // TODO
-        return false;
+        return filter.isToFilter(record);
     }
 }

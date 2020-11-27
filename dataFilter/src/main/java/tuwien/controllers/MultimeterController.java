@@ -16,10 +16,6 @@ public class MultimeterController {
     @Autowired
     MultimeterFilter filter;
 
-    MultimeterController() {
-
-    }
-
     /**
      * Example return:
      * {
@@ -39,7 +35,7 @@ public class MultimeterController {
      */
     @GetMapping("")
     MultimeterFilter getMultimeterFilter() {
-        // Automatically serialized to json
+        // Automatically serialized to JSON
         return filter;
     }
 
