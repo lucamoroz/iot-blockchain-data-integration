@@ -5,3 +5,11 @@ test:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   script:
     - echo "Hello, World! user $CI_REGISTRY_USER registry $CI_REGISTRY"
+
+build-fake-sensors:
+  image: docker:latest
+  stage: build
+  script:
+    - echo "Building Fake Sensor Image"
+    - docker build -t iotssg5ws2020/fake-sensor ./fake-sensor/
+    # TODO push to docker hub
