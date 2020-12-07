@@ -11,6 +11,6 @@ build-fake-sensors:
   stage: build
   script:
     - echo "Building Fake Sensor Image"
-    - docker build -t $CI_REGISTRY/iotssg5ws2020/fake-sensor:$CI_COMMIT_REF_NAME ./fake-sensor/
-    - docker push $CI_REGISTRY/iotssg5ws2020/fake-sensor:$CI_COMMIT_REF_NAME
+    - docker build -t $CI_REGISTRY/iotssg5ws2020/fake-sensor:$CI_COMMIT_REF_SLUG ./fake-sensor/
+    - docker push $CI_REGISTRY/iotssg5ws2020/fake-sensor:$CI_COMMIT_REF_SLUG
     # TODO push to docker hub
