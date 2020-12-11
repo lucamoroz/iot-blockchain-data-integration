@@ -15,5 +15,5 @@ build-data-filter:
   stage: build-2
   script:
     - echo "Building Fake Sensor Image"
-    - docker build -t iotssg5ws2020/data-filter:$CI_COMMIT_REF_SLUG ./d/
+    - docker build -t iotssg5ws2020/data-filter:$CI_COMMIT_REF_SLUG ./data-filter/
     - docker push iotssg5ws2020/data-filter:$CI_COMMIT_REF_SLUG
