@@ -4,7 +4,7 @@ services:
   # Data Filter
   data-filer:
     build:
-      context: ./dataFilter
+      context: ./data-filter
       dockerfile: ./Dockerfile
     environment:
         - MQTT_HOST=message-broker
