@@ -22,7 +22,7 @@ ENV CONTRACT_SOL_PATH ./src/contracts/SensorData.sol
 # Execute
 CMD ./wait-for-it.sh $BLOCKCHAIN_HOST -- \
     ./wait-for-it.sh $MQTT_HOST:$MQTT_PORT -- \
-    python src/blockchain_publisher.py \
+    python -u src/blockchain_publisher.py \
         --mqtt-host $MQTT_HOST \
         --mqtt-port $MQTT_PORT \
         --blockchain-host "http://$BLOCKCHAIN_HOST" \
