@@ -1,9 +1,11 @@
+default:
+  before_script:
+    - docker login --username iotssg5ws2020 --password 0e743ccf-a528-416e-843b-6ef29ee16c87
+
 build-fake-sensors:
   image: docker:latest
   stage: build
   script:
     - echo "Building Fake Sensor Image"
-    - docker build -t $CI_REGISTRY/iotssg5ws2020/fake-sensor:$CI_COMMIT_REF_SLUG ./fake-sensor/
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
-    - docker push $CI_REGISTRY/iotssg5ws2020/fake-sensor:$CI_COMMIT_REF_SLUG
-    # TODO push to docker hub
+    - docker build -t iotssg5ws2020/fake-sensor:$CI_COMMIT_REF_SLUG ./fake-sensor/
+    - docker push iotssg5ws2020/fake-sensor:$CI_COMMIT_REF_SLUG
