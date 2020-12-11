@@ -1,17 +1,21 @@
-stages:
-  - login
-  - build
-
-login:
-  image: docker:latest
-  stage: login
-  script:
-    - docker login --username iotssg5ws2020 --password 0e743ccf-a528-416e-843b-6ef29ee16c87
+variables:
+  REGISTRY_USER: iotssg5ws2020
+  REGISTRY_PWD: 0e743ccf-a528-416e-843b-6ef29ee16c87
 
 build-fake-sensors:
   image: docker:latest
   stage: build
   script:
     - echo "Building Fake Sensor Image"
+    - docker login --username $REGISTRY_USER --password $REGISTRY_PWD
     - docker build -t iotssg5ws2020/fake-sensor:$CI_COMMIT_REF_SLUG ./fake-sensor/
     - docker push iotssg5ws2020/fake-sensor:$CI_COMMIT_REF_SLUG
+
+build-data-filter:
+  image: docker:latest
+  stage: build
+  script:
+    - echo "Building Data Filter Image"
+    - docker login --username $REGISTRY_USER --password $REGISTRY_PWD
+    - docker build -t iotssg5ws2020/data-filter:$CI_COMMIT_REF_SLUG ./dataFilter/
+    - docker push iotssg5ws2020/data-filter:$CI_COMMIT_REF_SLUG
