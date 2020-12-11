@@ -7,14 +7,18 @@ import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.env.Environment;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Component;
+import tuwien.filters.MultimeterFilter;
 import tuwien.models.MultimeterRecord;
+
+import java.util.logging.Logger;
 
 @Component
 public class MQTTMultimeter implements CommandLineRunner, IMqttMessageListener {
+    private final static Logger LOGGER = Logger.getLogger(MQTTMultimeter.class.getName());
 
     @Autowired
     TaskExecutor executor;
@@ -22,19 +26,20 @@ public class MQTTMultimeter implements CommandLineRunner, IMqttMessageListener {
     @Autowired
     MqttClient mqttClient;
 
-    @Value("${multimeterTopic}")
-    private String multimeterTopic;
+    @Autowired
+    MultimeterFilter filter;
 
-    @Value("${multimeterFilteredTopic}")
-    private String multimeterFilteredTopic;
+    @Autowired
+    private Environment environment;
 
     // Executed after all beans have been initialized
     @Override
     public void run(String... args) {
         executor.execute(() -> {
+            String multimeterTopic = environment.getRequiredProperty("MQTT_MULTIMETER_TOPIC");
             try {
                 mqttClient.subscribe(multimeterTopic, this);
-                System.out.println("Subscribed to " + multimeterTopic);
+                LOGGER.info("Subscribed to " + multimeterTopic);
             } catch (MqttException e) {
                 throw new RuntimeException("Unable to subscribe to " + multimeterTopic + ": " + e.getMessage());
             }
@@ -43,29 +48,34 @@ public class MQTTMultimeter implements CommandLineRunner, IMqttMessageListener {
 
     @Override
     public void messageArrived(String topic, MqttMessage message) {
+        String multimeterFilteredTopic = environment.getRequiredProperty("MQTT_MULTIMETER_FILTERED_TOPIC");
+
         ObjectMapper mapper = new ObjectMapper();
-        MultimeterRecord wr;
+        MultimeterRecord mr;
         try {
             String json = new String(message.getPayload());
-            wr = mapper.readValue(json, MultimeterRecord.class);
+            mr = mapper.readValue(json, MultimeterRecord.class);
         } catch (JsonProcessingException e) {
-            System.out.println("Couldn't parse: " + message.toString() + " - Error: " + e.getMessage());
+            LOGGER.severe(String.format("Couldn't parse: %s - Error: %s", message.toString(), e.getMessage()));
             return;
         }
-        System.out.println("Received: " + wr.toString());
 
-        if (isToFilter(wr)) return;
+        if (isToFilter(mr)) {
+            LOGGER.info("Filtered: " + mr.toString());
+            return;
+        } else {
+            LOGGER.info(String.format("Publishing to topic %s: %s", multimeterFilteredTopic, mr.toString()));
+        }
 
         message.setQos(2);
         try {
             mqttClient.publish(multimeterFilteredTopic, message);
         } catch (MqttException e) {
-            System.out.println("Unable to forward message: " + e.getMessage());
+            LOGGER.severe("Unable to forward message: " + e.getMessage());
         }
     }
 
     private boolean isToFilter(MultimeterRecord record) {
-        // TODO
-        return false;
+        return filter.isToFilter(record);
     }
 }

@@ -6,12 +6,26 @@ services:
     build:
       context: ./data-filter
       dockerfile: ./Dockerfile
+    environment:
+        - MQTT_HOST=message-broker
+        - MQTT_ANEMOMETER_TOPIC=/+/anemometer
+        - MQTT_ANEMOMETER_FILTERED_TOPIC=/anemometerFiltered
+        - MQTT_MULTIMETER_TOPIC=/+/multimeter
+        - MQTT_MULTIMETER_FILTERED_TOPIC=/multimeterFiltered
+        - MQTT_ELECTRICAL_TOPIC=/+/electrical
+        - MQTT_ELECTRICAL_FILTERED_TOPIC=/electricalFiltered
     networks:
       - default
-    expose:
-      - "8080"
     ports:
-      - "8080:8080"
+      - "80:8080"
+
+  # Ethereum blockchain
+  ganache:
+    image: trufflesuite/ganache-cli
+    expose:
+      - 8545
+    ports:
+      - 8545:8545    
 
   # MQTT Broker
   message-broker:
@@ -29,25 +43,33 @@ services:
       - ./volumes/mosquitto/data:/mosquitto/data
       - ./volumes/mosquitto/log:/mosquitto/log
 
+  # Data Filter
+  data-filter:
+    build:
+      context: ./dataFilter
+      dockerfile: ./Dockerfile
+    networks:
+      - default
+    expose:
+      - "8080"
+    ports:
+      - "8080:8080"
+    depends_on:
+      - message-broker
+
+  # Transfer MQTT to blockchain
   blockchain-publisher:
     build:
       context: ./blockchain-publisher
     environment:
       - MQTT_HOST=message-broker
       - MQTT_PORT=1883
-      - MQTT_TOPIC=mytopic
+      - MQTT_TOPIC=anemometerFiltered
       - BLOCKCHAIN_HOST=ganache:8545
     depends_on:
       - message-broker
       - ganache
   
-  ganache:
-    image: trufflesuite/ganache-cli
-    expose:
-      - 8545
-    ports:
-      - 8545:8545    
-
   # A demo fake sensor (Anemometer)
   fake-anemometer:
     build:
@@ -64,3 +86,5 @@ services:
       - FILES=./data/HomeA/homeA2014.csv ./data/HomeA/homeA2015.csv
     volumes:
       - ./fake-sensor/data:/app/data
+    depends_on:
+      - message-broker
