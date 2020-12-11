@@ -1,10 +1,10 @@
-variables:
-  REGISTRY_USER: iotssg5ws2020
-  REGISTRY_PWD: 0e743ccf-a528-416e-843b-6ef29ee16c87
+stages:
+  - build-1
+  - build-2
 
 build-fake-sensors:
   image: docker:latest
-  stage: build
+  stage: build-1
   script:
     - echo "Building Fake Sensor Image"
     - docker build -t iotssg5ws2020/fake-sensor:$CI_COMMIT_REF_SLUG ./fake-sensor/
@@ -12,8 +12,8 @@ build-fake-sensors:
 
 build-data-filter:
   image: docker:latest
-  stage: build
+  stage: build-2
   script:
-    - echo "Building Data Filter Image"
-    - docker build -t iotssg5ws2020/data-filter:$CI_COMMIT_REF_SLUG ./dataFilter/
+    - echo "Building Fake Sensor Image"
+    - docker build -t iotssg5ws2020/data-filter:$CI_COMMIT_REF_SLUG ./d/
     - docker push iotssg5ws2020/data-filter:$CI_COMMIT_REF_SLUG
