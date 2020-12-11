@@ -7,7 +7,6 @@ build-fake-sensors:
   stage: build
   script:
     - echo "Building Fake Sensor Image"
-    - docker login --username $REGISTRY_USER --password $REGISTRY_PWD
     - docker build -t iotssg5ws2020/fake-sensor:$CI_COMMIT_REF_SLUG ./fake-sensor/
     - docker push iotssg5ws2020/fake-sensor:$CI_COMMIT_REF_SLUG
 
@@ -16,6 +15,5 @@ build-data-filter:
   stage: build
   script:
     - echo "Building Data Filter Image"
-    - docker login --username $REGISTRY_USER --password $REGISTRY_PWD
     - docker build -t iotssg5ws2020/data-filter:$CI_COMMIT_REF_SLUG ./dataFilter/
     - docker push iotssg5ws2020/data-filter:$CI_COMMIT_REF_SLUG
