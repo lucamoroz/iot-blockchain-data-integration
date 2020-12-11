@@ -3,20 +3,22 @@ package tuwien;
 import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.env.Environment;
 import org.springframework.core.task.SyncTaskExecutor;
 import org.springframework.core.task.TaskExecutor;
 
 import javax.annotation.PreDestroy;
+import java.util.logging.Logger;
 
 @SpringBootApplication
 public class Application implements MqttCallback {
+	private final static Logger LOGGER = Logger.getLogger(Application.class.getName());
 
-	@Value("${broker}")
-	private String broker;
+	@Autowired
+	private Environment environment;
 
 	@Autowired
 	MqttClient mqttClient;
@@ -39,16 +41,18 @@ public class Application implements MqttCallback {
 	@Bean
 	MqttClient mqttClient() {
 		try {
-			MqttClient client = new MqttClient(broker, "filter", new MemoryPersistence());
+			String broker = environment.getRequiredProperty("MQTT_HOST");
+			MqttClient client = new MqttClient("tcp://" + broker, "filter", new MemoryPersistence());
 
 			MqttConnectOptions options = new MqttConnectOptions();
-			// TODO which type of session?
+
 			options.setCleanSession(false);
 			options.setAutomaticReconnect(true);
 			client.setCallback(this);
+			LOGGER.info("Connecting to: " + broker);
 			client.connect(options);
 
-			System.out.println("Connected to: " + broker);
+			LOGGER.info("Connected to: " + broker);
 
 			return client;
 		} catch (MqttException e) {
@@ -58,7 +62,7 @@ public class Application implements MqttCallback {
 
 	@Override
 	public void connectionLost(Throwable cause) {
-		System.out.println("MQTT connection lost: " + cause.getMessage());
+		LOGGER.info("MQTT connection lost: " + cause.getMessage());
 	}
 
 	@Override
@@ -73,7 +77,7 @@ public class Application implements MqttCallback {
 
 	@PreDestroy
 	public void destroy() throws Exception {
-		System.out.println("Closing...");
+		LOGGER.info("Closing...");
 		mqttClient.disconnect();
 		mqttClient.close();
 	}

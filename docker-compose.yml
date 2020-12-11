@@ -1,6 +1,24 @@
 version: '3'
 services:
 
+  # Data Filter
+  data-filer:
+    build:
+      context: ./dataFilter
+      dockerfile: ./Dockerfile
+    environment:
+        - MQTT_HOST=message-broker
+        - MQTT_ANEMOMETER_TOPIC=/+/anemometer
+        - MQTT_ANEMOMETER_FILTERED_TOPIC=/anemometerFiltered
+        - MQTT_MULTIMETER_TOPIC=/+/multimeter
+        - MQTT_MULTIMETER_FILTERED_TOPIC=/multimeterFiltered
+        - MQTT_ELECTRICAL_TOPIC=/+/electrical
+        - MQTT_ELECTRICAL_FILTERED_TOPIC=/electricalFiltered
+    networks:
+      - default
+    ports:
+      - "80:8080"
+
   # Ethereum blockchain
   ganache:
     image: trufflesuite/ganache-cli
