@@ -14,8 +14,8 @@ public class AnemometerFilter {
 
     public AnemometerFilter() {
         // TODO load from file
-        windSpeedConstraint = new NumberConstraint(7, Comparison.GREATER);
-        windBearingConstraint = new NumberConstraint(280, Comparison.GREATER_OR_EQUAL);
+        windSpeedConstraint = new NumberConstraint(4, Comparison.LESS_OR_EQUAL);
+        windBearingConstraint = new NumberConstraint(360, Comparison.GREATER_OR_EQUAL);
     }
 
     public boolean isToFilter(AnemometerRecord record) {

@@ -47,11 +47,11 @@ services:
     environment:
       - MQTT_HOST=message-broker
       - MQTT_ANEMOMETER_TOPIC=/+/anemometer
-      - MQTT_ANEMOMETER_FILTERED_TOPIC=/anemometerFiltered
+      - MQTT_ANEMOMETER_FILTERED_TOPIC=filtered
       - MQTT_MULTIMETER_TOPIC=/+/multimeter
-      - MQTT_MULTIMETER_FILTERED_TOPIC=/anemometerFiltered
+      - MQTT_MULTIMETER_FILTERED_TOPIC=filtered
       - MQTT_ELECTRICAL_TOPIC=/+/electrical
-      - MQTT_ELECTRICAL_FILTERED_TOPIC=/electricalFiltered
+      - MQTT_ELECTRICAL_FILTERED_TOPIC=filtered
     networks:
       - default
     ports:
@@ -64,7 +64,7 @@ services:
     environment:
       - MQTT_HOST=message-broker
       - MQTT_PORT=1883
-      - MQTT_TOPIC=anemometerFiltered
+      - MQTT_TOPIC=filtered
       - BLOCKCHAIN_HOST=ganache:8545
     depends_on:
       - message-broker

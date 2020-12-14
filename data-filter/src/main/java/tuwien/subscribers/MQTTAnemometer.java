@@ -7,7 +7,6 @@ import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.env.Environment;
 import org.springframework.core.task.TaskExecutor;
@@ -63,7 +62,7 @@ public class MQTTAnemometer implements CommandLineRunner, IMqttMessageListener {
             return;
         }
 
-        if (isToFilter(ar)) {
+        if (ar.getWindSpeed() < 4) {
             LOGGER.info("Filtered: " + ar.toString());
             return;
         } else {
