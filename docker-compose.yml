@@ -40,16 +40,16 @@ services:
       - message-broker
 
   # Data Filter
-  data-filer:
+  data-filter:
     build:
       context: ./data-filter
       dockerfile: ./Dockerfile
     environment:
       - MQTT_HOST=message-broker
       - MQTT_ANEMOMETER_TOPIC=/+/anemometer
-      - MQTT_ANEMOMETER_FILTERED_TOPIC=anemometerFiltered
+      - MQTT_ANEMOMETER_FILTERED_TOPIC=/anemometerFiltered
       - MQTT_MULTIMETER_TOPIC=/+/multimeter
-      - MQTT_MULTIMETER_FILTERED_TOPIC=multimeterFiltered
+      - MQTT_MULTIMETER_FILTERED_TOPIC=/anemometerFiltered
       - MQTT_ELECTRICAL_TOPIC=/+/electrical
       - MQTT_ELECTRICAL_FILTERED_TOPIC=/electricalFiltered
     networks:
