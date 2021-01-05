@@ -62,7 +62,7 @@ public class MQTTAnemometer implements CommandLineRunner, IMqttMessageListener {
             return;
         }
 
-        if (ar.getWindSpeed() < 4) {
+        if (isToFilter(ar)) {
             LOGGER.info("Filtered: " + ar.toString());
             return;
         } else {

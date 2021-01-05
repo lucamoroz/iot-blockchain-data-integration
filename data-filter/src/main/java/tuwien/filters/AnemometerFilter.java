@@ -1,21 +1,45 @@
 package tuwien.filters;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
-import tuwien.filters.utils.Comparison;
 import tuwien.filters.utils.Filter;
 import tuwien.filters.utils.NumberConstraint;
 import tuwien.models.AnemometerRecord;
 
+import javax.annotation.PostConstruct;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.logging.Logger;
+
 @Component
 public class AnemometerFilter {
+    private final static Logger LOGGER = Logger.getLogger(AnemometerFilter.class.getName());
+    private final static String filterPath = "/app/filters/anemometerFilter.json";
 
     public NumberConstraint windSpeedConstraint;
     public NumberConstraint windBearingConstraint;
 
-    public AnemometerFilter() {
-        // TODO load from file
-        windSpeedConstraint = new NumberConstraint(4, Comparison.LESS_OR_EQUAL);
-        windBearingConstraint = new NumberConstraint(360, Comparison.GREATER_OR_EQUAL);
+    public AnemometerFilter() { }
+
+    @PostConstruct
+    public void loadFilter() {
+        try {
+            Path path = Paths.get(filterPath);
+            String anemometerJson = String.join("\n", Files.readAllLines(path));
+            ObjectMapper mapper = new ObjectMapper();
+            AnemometerFilter defaultFilter = mapper.readValue(anemometerJson, AnemometerFilter.class);
+            update(defaultFilter);
+
+        } catch (InvalidPathException e) {
+            LOGGER.severe("Couldn't load default anemometer filter, invalid path: " + e.getMessage());
+        } catch (IOException e) {
+            LOGGER.severe("Couldn't load default anemometer filter: " + e.getMessage());
+        }
     }
 
     public boolean isToFilter(AnemometerRecord record) {
@@ -27,6 +51,17 @@ public class AnemometerFilter {
         this.windSpeedConstraint = newFilter.windSpeedConstraint;
         this.windBearingConstraint = newFilter.windBearingConstraint;
 
-        // TODO save to file
+        saveFilter();
+    }
+
+    private void saveFilter() {
+        try {
+            Path path = Paths.get(filterPath);
+            ObjectMapper mapper = new ObjectMapper();
+            String newFilterJson = mapper.writeValueAsString(this);
+            Files.write(path, newFilterJson.getBytes(StandardCharsets.UTF_8));
+        } catch (IOException e) {
+            LOGGER.severe("Could save anemometer filter: " + e.getMessage());
+        }
     }
 }
