@@ -18,6 +18,9 @@ Set the following environment variables:
 - `MQTT_ELECTRICAL_TOPIC`
 - `MQTT_ELECTRICAL_FILTERED_TOPIC` where electrical filtered data will be published
 
+Filtering parameters are saved in the folder `filters/`, following the JSON format.
+See REST Endpoints section for more info: the format is the same.
+
 
 ## Notes
 - Allow IDEA IDE to process lombok annotations by install plugin lombok.
@@ -73,3 +76,23 @@ Accepts anemometer filters as JSON body (see GET above).
 Valid comparisons are:  LESS, LESS_OR_EQUAL, EQUAL, GREATER_OR_EQUAL, GREATER.
 
 The server replies with the new filter data  as JSON if correctly updated, otherwise it replies with the old filter data as JSON.
+
+### Electrical
+- `GET {HOST}/filters/electrical/`
+  Returns JSON data of the filter, e.g.:
+```
+{
+    "valueConstraint": {
+        "value": 300,
+        "comparison": "GREATER_OR_EQUAL"
+    }
+}
+```
+
+Where value is the electrical power usage.
+
+- `POST {HOST}/filters/electrical/`
+  Accepts anemometer filters as JSON body (see GET above).
+  Valid comparisons are:  LESS, LESS_OR_EQUAL, EQUAL, GREATER_OR_EQUAL, GREATER.
+
+The server replies with the new filter data as JSON if correctly updated, otherwise it replies with the old filter data as JSON.
