@@ -1,0 +1,88 @@
+<h3>Work in progress...</h3>
+<div class="wrapper">
+  <div class="tables">
+    <div class="wind-table-button-wrapper">
+      <div class="load-button-row">
+        <button (click)="addWindDataToTable()" *ngIf="windDataToLoad.length > 0">
+          {{windDataToLoad.length + ' new item(s) to load'}}
+        </button>
+      </div>
+      <div class="table-wrapper">
+        <table>
+          <tr>
+            <th>Time</th>
+            <th>Wind Speed</th>
+            <th>Wind Bearing</th>
+          </tr>
+          <tr *ngFor="let data of windDataToDisplay">
+            <td>{{data.time}}</td>
+            <td>{{data.windSpeed}}</td>
+            <td>{{data.windBearing}}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div class="temperature-table-button-wrapper">
+      <div class="load-button-row">
+        <button (click)="addTemperatureDataToTable()" *ngIf="temperatureDataToLoad.length > 0">
+          {{temperatureDataToLoad.length + ' new item(s) to load'}}
+        </button>
+      </div>
+      <div class="table-wrapper">
+        <table>
+          <tr>
+            <th>Time</th>
+            <th>Humidity</th>
+            <th>Temperature</th>
+            <th>Pressure</th>
+          </tr>
+          <tr *ngFor="let data of temperatureDataToDisplay">
+            <td>{{data.time}}</td>
+            <td>{{data.humidity}}</td>
+            <td>{{data.temperature}}</td>
+            <td>{{data.pressure}}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="filter-wrapper">
+    <form [formGroup]="filterForm">
+      <div class="apply-filter-wrapper">
+        <button (click)="applyFilter()" [disabled]="!this.filterChanged">
+          Apply filter
+        </button>
+      </div>
+      <div class="wind-speed filter-section">
+        <div>
+          Wind Speed
+        </div>
+        <ngx-slider [options]="windSpeedOptions" formControlName="windSpeedControl"></ngx-slider>
+      </div>
+      <div class="wind-bearing filter-section">
+        <div>
+          Wind Bearing
+        </div>
+        <ngx-slider [options]="windBearingOptions" formControlName="windBearingControl"></ngx-slider>
+      </div>
+      <div class="humidity filter-section">
+        <div>
+          Humidity
+        </div>
+        <ngx-slider [options]="humidityOptions" formControlName="humidityControl"></ngx-slider>
+      </div>
+      <div class="temperature filter-section">
+        <div>
+          Temperature
+        </div>
+        <ngx-slider [options]="temperatureOptions" formControlName="temperatureControl"></ngx-slider>
+      </div>
+      <div class="pressure filter-section">
+        <div>
+          Pressure
+        </div>
+        <ngx-slider [options]="pressureOptions" formControlName="pressureControl"></ngx-slider>
+      </div>
+    </form>
+  </div>
+</div>
