@@ -8,6 +8,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.env.Environment;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Component;
+import tuwien.filters.ElectricalFilter;
 import tuwien.models.ElectricalRecord;
 
 import java.util.logging.Logger;
@@ -22,6 +23,9 @@ public class MQTTElectrical implements CommandLineRunner, IMqttMessageListener {
 
     @Autowired
     MqttClient mqttClient;
+
+    @Autowired
+    ElectricalFilter filter;
 
     @Autowired
     private Environment environment;
@@ -72,8 +76,5 @@ public class MQTTElectrical implements CommandLineRunner, IMqttMessageListener {
         }
     }
 
-    private boolean isToFilter(ElectricalRecord record) {
-        // TODO
-        return false;
-    }
+    private boolean isToFilter(ElectricalRecord record) { return filter.isToFilter(record); }
 }

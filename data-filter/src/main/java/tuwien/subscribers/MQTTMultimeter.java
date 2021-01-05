@@ -60,7 +60,7 @@ public class MQTTMultimeter implements CommandLineRunner, IMqttMessageListener {
             return;
         }
 
-        if (mr.getHumidity() < 0.5 || mr.getTemperature() > 0) {
+        if (isToFilter(mr)) {
             LOGGER.info("Filtered: " + mr.toString());
             return;
         } else {
