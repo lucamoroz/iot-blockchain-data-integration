@@ -68,20 +68,11 @@ services:
               --mqtt-port 1883
               --blockchain-host "$BLOCKCHAIN_HOST"
               --topic filtered
-              --contract-sol-path $CONTRACT_SOL_PATH
+              --contract-abi-path $CONTRACT_ABI_PATH
+              --contract-address $CONTRACT_ADDRESS
               --account-private-key $ACCOUNT_PRIVATE_KEY
     depends_on:
       - message-broker
-      - ganache
-
-  # Ethereum blockchain
-  ganache:
-    image: trufflesuite/ganache-cli
-    command: --mnemonic diamond smart face permit sock element exclude loan december
-    expose:
-      - 8545
-    ports:
-      - 8545:8545
 
   # MQTT Broker
   message-broker:
