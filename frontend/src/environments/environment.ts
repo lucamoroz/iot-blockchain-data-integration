@@ -4,11 +4,11 @@
 
 export const environment = {
   production: false,
-  blockChainAddressWS: 'wss://kovan.infura.io/ws/v3/4c8b0ab9755f4828a2957ca6fd25f2f8',
-  blockChainAddressHttp: 'https://kovan.infura.io/v3/4c8b0ab9755f4828a2957ca6fd25f2f8',
+  blockChainAddressWS: 'ws://127.0.0.1:8545',
+  blockChainAddressHttp: 'http://127.0.0.1:8545',
   dataFilterAddress: 'http://127.0.0.1',
-  contractAddress: '0x6b651f25125964a084627e78e703799cf2bdf5ca',
-  privateAccountKey: '0x2e3f3ddf0986ce65c0a179f43692c388150c4ec67ecaab6c48a7685cf43988df'
+  contractAddress: '0x675741dEff7Bd0f3e4ad9f9E4f8EC1A0A2CDBdaE ',
+  privateAccountKey: ''
 };
 
 /*
