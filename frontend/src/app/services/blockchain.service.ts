@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable, isDevMode} from '@angular/core';
 import Web3 from 'web3';
 import {Subject} from 'rxjs';
 import { environment } from '../../environments/environment';
@@ -10,7 +10,11 @@ export class BlockchainService {
 
   constructor() {
     const web3 = new Web3(new Web3.providers.WebsocketProvider(environment.blockChainAddressWS));
-    web3.eth.defaultAccount = web3.eth.accounts[0];
+    if (isDevMode()) {
+      web3.eth.defaultAccount = web3.eth.accounts[0];
+    } else {
+      web3.eth.accounts.privateKeyToAccount(environment.privateAccountKey);
+    }
     this.contract = new web3.eth.Contract([
       {
         anonymous: false,

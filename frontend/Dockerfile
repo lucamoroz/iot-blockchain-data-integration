@@ -3,12 +3,15 @@ FROM tiangolo/node-frontend:10 as build-stage
 WORKDIR /app
 
 COPY package*.json /app/
+COPY patch.js /app/
 
 RUN npm install
+RUN npm run postinstall
 
+ARG configuration=production
 COPY ./ /app/
 
-RUN npm run build -- --output-path=./dist/out
+RUN npm run build -- --output-path=./dist/out --configuration $configuration
 
 FROM nginx:1.15
 
