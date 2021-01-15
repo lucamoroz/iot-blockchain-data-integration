@@ -1,3 +1,6 @@
+#Production environment varibles
+Replace existing environment.prod.ts in frontend/src/environments
+
 # Frontend
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.0.2.
