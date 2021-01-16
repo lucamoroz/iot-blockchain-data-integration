@@ -1,0 +1,10 @@
+<div class="notification-wrapper">
+  <h3>
+    Notification
+  </h3>
+  <div class="notification-list">
+    <div class="list-item" *ngFor="let notification of notifications; let last = last" [ngClass]="last?'is-last':'not-Last'">
+      {{notification}}
+    </div>
+  </div>
+</div>

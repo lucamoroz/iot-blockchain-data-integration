@@ -6,10 +6,14 @@ import {CommonModule} from '@angular/common';
 import {NgxSliderModule} from '@angular-slider/ngx-slider';
 import {ReactiveFormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
+import { AdminComponent } from './admin/admin.component';
+import { UserComponent } from './user/user.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    AdminComponent,
+    UserComponent
   ],
   imports: [
     BrowserModule,

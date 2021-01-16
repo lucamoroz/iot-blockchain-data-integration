@@ -1,18 +1,31 @@
-<h3>Work in progress...</h3>
+<div class="admin-user-switch-row">
+  <div class="btn-group">
+    <span>
+      <button class="button" (click)="selectAdmin()" [ngClass]="!!adminSelected?'admin-button':'highlight'">
+        Admin
+      </button>
+    </span>
+    <span>
+      <button class="button" (click)="selectUser()" [ngClass]="!!userSelected?'user-button':'highlight'">
+        User
+      </button>
+    </span>
+  </div>
+</div>
 <div class="wrapper">
   <div class="tables">
     <div class="wind-table-button-wrapper">
       <div class="load-button-row">
-        <button (click)="addWindDataToTable()" *ngIf="windDataToLoad.length > 0">
-          {{windDataToLoad.length + ' new item(s) to load'}}
+        <button class="load-new-button saving" (click)="addWindDataToTable()" >
+          {{windDataToLoad.length + ' new item(s) to load'}} <span>.</span><span>.</span><span>.</span>
         </button>
       </div>
       <div class="table-wrapper">
         <table>
           <tr>
-            <th>Time</th>
-            <th>Wind Speed</th>
-            <th>Wind Bearing</th>
+            <th [ngClass]="!!adminSelected?'admin-tab':'user-tab'">Time</th>
+            <th [ngClass]="!!adminSelected?'admin-tab':'user-tab'">Wind Speed</th>
+            <th [ngClass]="!!adminSelected?'admin-tab':'user-tab'">Wind Bearing</th>
           </tr>
           <tr *ngFor="let data of windDataToDisplay">
             <td>{{data.time}}</td>
@@ -31,10 +44,10 @@
       <div class="table-wrapper">
         <table>
           <tr>
-            <th>Time</th>
-            <th>Humidity</th>
-            <th>Temperature</th>
-            <th>Pressure</th>
+            <th [ngClass]="!!adminSelected?'admin-tab':'user-tab'">Time</th>
+            <th [ngClass]="!!adminSelected?'admin-tab':'user-tab'">Humidity</th>
+            <th [ngClass]="!!adminSelected?'admin-tab':'user-tab'">Temperature</th>
+            <th [ngClass]="!!adminSelected?'admin-tab':'user-tab'">Pressure</th>
           </tr>
           <tr *ngFor="let data of temperatureDataToDisplay">
             <td>{{data.time}}</td>
@@ -46,43 +59,10 @@
       </div>
     </div>
   </div>
-  <div class="filter-wrapper">
-    <form [formGroup]="filterForm">
-      <div class="apply-filter-wrapper">
-        <button (click)="applyFilter()" [disabled]="!this.filterChanged">
-          Apply filter
-        </button>
-      </div>
-      <div class="wind-speed filter-section">
-        <div>
-          Wind Speed
-        </div>
-        <ngx-slider [options]="windSpeedOptions" formControlName="windSpeedControl"></ngx-slider>
-      </div>
-      <div class="wind-bearing filter-section">
-        <div>
-          Wind Bearing
-        </div>
-        <ngx-slider [options]="windBearingOptions" formControlName="windBearingControl"></ngx-slider>
-      </div>
-      <div class="humidity filter-section">
-        <div>
-          Humidity
-        </div>
-        <ngx-slider [options]="humidityOptions" formControlName="humidityControl"></ngx-slider>
-      </div>
-      <div class="temperature filter-section">
-        <div>
-          Temperature
-        </div>
-        <ngx-slider [options]="temperatureOptions" formControlName="temperatureControl"></ngx-slider>
-      </div>
-      <div class="pressure filter-section">
-        <div>
-          Pressure
-        </div>
-        <ngx-slider [options]="pressureOptions" formControlName="pressureControl"></ngx-slider>
-      </div>
-    </form>
+  <div *ngIf="!!adminSelected">
+    <app-admin></app-admin>
+  </div>
+  <div *ngIf="!!userSelected">
+    <app-user></app-user>
   </div>
 </div>

@@ -1,11 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Subject, Subscription} from 'rxjs';
 import {BlockchainService} from './services/blockchain.service';
-import {Options} from '@angular-slider/ngx-slider';
-import {FormControl, FormGroup} from '@angular/forms';
-import {FilterService} from './services/filter.service';
-import {Comparison} from './model/comparison';
-
 
 @Component({
   selector: 'app-root',
@@ -20,36 +15,11 @@ export class AppComponent implements OnInit, OnDestroy {
   public temperatureDataToLoad: object[] = [];
   public windDataToLoad: object[] = [];
   public windDataToDisplay: object[] = [];
-  public filterChanged = false;
-  public filterForm: FormGroup = new FormGroup({
-    windSpeedControl: new FormControl([20, 80]),
-    windBearingControl: new FormControl([20, 80]),
-    humidityControl: new FormControl([20, 80]),
-    temperatureControl: new FormControl([20, 80]),
-    pressureControl: new FormControl([20, 80])
-  });
-  windSpeedOptions: Options = {
-    floor: 0,
-    ceil: 100
-  };
-  windBearingOptions: Options = {
-    floor: 0,
-    ceil: 100
-  };
-  humidityOptions: Options = {
-    floor: 0,
-    ceil: 100
-  };
-  temperatureOptions: Options = {
-    floor: 0,
-    ceil: 100
-  };
-  pressureOptions: Options = {
-    floor: 0,
-    ceil: 100
-  };
+  public notifications: string[] = [];
+  public adminSelected = true;
+  public userSelected = false;
 
-  constructor(private blockChainService: BlockchainService, private filterService: FilterService) {
+  constructor(private blockChainService: BlockchainService) {
     this.blockChainSubject = blockChainService.blockChainData;
   }
 
@@ -62,14 +32,11 @@ export class AppComponent implements OnInit, OnDestroy {
       this.blockChainSubject.subscribe(x => {
         if (x.hasOwnProperty('humidity')) {
           this.temperatureDataToLoad.push(x);
+          this.checkMultimeter(x, this.notifications);
         } else{
           this.windDataToLoad.push(x);
+          this.checkAnemometer(x, this.notifications);
         }
-      })
-    );
-    this.subscriptions.add(
-      this.filterForm.valueChanges.subscribe(_ => {
-        this.filterChanged = true;
       })
     );
   }
@@ -83,18 +50,21 @@ export class AppComponent implements OnInit, OnDestroy {
     this.windDataToLoad = [];
   }
 
-  applyFilter(): void {
-    this.subscriptions.add(this.filterService.sendAnemometerFilter({
-      windSpeedConstraint: { value: 20, comparison: Comparison.GREATER_OR_EQUAL },
-      windBearingConstraint: { value: 20, comparison: Comparison.GREATER_OR_EQUAL }
-    }).subscribe(x =>
-    {console.log(x); }));
-    this.subscriptions.add(this.filterService.sendMultimeterFilter({
-      temperatureConstraint: { value: 20, comparison: Comparison.GREATER_OR_EQUAL },
-      humidityConstraint: { value: 20, comparison: Comparison.GREATER_OR_EQUAL },
-      pressureConstraint: { value: 20, comparison: Comparison.GREATER_OR_EQUAL }
-    }).subscribe(x =>
-    {console.log(x); }));
-    this.filterChanged = false;
+  selectAdmin(): void {
+    this.adminSelected = true;
+    this.userSelected = false;
+  }
+
+  selectUser(): void {
+    this.adminSelected = false;
+    this.userSelected = true;
+  }
+
+  private checkMultimeter(x: any, notifications: string[]) {
+
+  }
+
+  private checkAnemometer(x: any, notifications: string[]) {
+
   }
 }

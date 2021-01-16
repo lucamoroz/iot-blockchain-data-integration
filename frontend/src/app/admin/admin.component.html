@@ -1,0 +1,39 @@
+<div class="filter-wrapper">
+  <form [formGroup]="filterForm">
+    <div class="apply-filter-wrapper">
+      <button class="apply-filter-button" (click)="applyFilter()" [disabled]="!this.filterChanged">
+        Apply filter
+      </button>
+    </div>
+    <div class="wind-speed filter-section">
+      <div>
+        Wind Speed
+      </div>
+      <ngx-slider [options]="windSpeedOptions" formControlName="windSpeedControl"></ngx-slider>
+    </div>
+    <div class="wind-bearing filter-section">
+      <div>
+        Wind Bearing
+      </div>
+      <ngx-slider [options]="windBearingOptions" formControlName="windBearingControl"></ngx-slider>
+    </div>
+    <div class="humidity filter-section">
+      <div>
+        Humidity
+      </div>
+      <ngx-slider [options]="humidityOptions" formControlName="humidityControl"></ngx-slider>
+    </div>
+    <div class="temperature filter-section">
+      <div>
+        Temperature
+      </div>
+      <ngx-slider [options]="temperatureOptions" formControlName="temperatureControl"></ngx-slider>
+    </div>
+    <div class="pressure filter-section">
+      <div>
+        Pressure
+      </div>
+      <ngx-slider [options]="pressureOptions" formControlName="pressureControl"></ngx-slider>
+    </div>
+  </form>
+</div>

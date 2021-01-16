@@ -17,13 +17,6 @@ th {
   height: 3em;
 }
 
-.filter-wrapper{
-  border: 2px solid black;
-  min-width: 20em;
-  margin: 0 0.5em;
-  padding: 0.75em;
-}
-
 .wind-table-button-wrapper{
   margin: 0 0.5em;
 }
@@ -40,12 +33,139 @@ th {
 .tables{
   display: flex;
   flex-wrap: wrap;
+  font-weight: normal;
 }
 
-.filter-section + .filter-section{
-  margin-top: 1.5em;
+table {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
 }
 
-.apply-filter-wrapper{
+table td, table th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+table tr:nth-child(even){background-color: #f2f2f2;}
+
+table tr:hover {background-color: #ddd;}
+
+table th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  color: white;
+}
+
+table .admin-tab{
+  background-color: #5a96bf;
+}
+
+table .user-tab{
+  background-color: #c96c61;
+}
+
+.admin-user-switch-row {
+  display: flex;
+  justify-content: center;
   padding-bottom: 1em;
 }
+
+.btn-group .button {
+  background-color: #96a0a8;
+  border: 1px solid #47494a;
+  color: white;
+  padding: 0.5em 1.5em;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+  float: left;
+}
+
+.btn-group .button:not(:last-child) {
+  border-right: none; /* Prevent double borders */
+}
+
+.btn-group .highlight:hover {
+  background-color: #9fa6ab;
+}
+
+.load-new-button{
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  border: 2px solid black;
+  color: black;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 15px;
+  padding: 0.4em 0.9em;
+  text-align: center;
+  text-decoration: none;
+  -webkit-animation: glowing 3000ms infinite;
+  -moz-animation: glowing 3000ms infinite;
+  -o-animation: glowing 3000ms infinite;
+  animation: glowing 3000ms infinite;
+}
+
+.btn-group .admin-button {
+  background-color: #5a96bf;
+}
+
+.btn-group .user-button {
+  background-color: #c96c61;
+}
+
+@keyframes blink {
+  0% {
+    opacity: .2;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    opacity: .2;
+  }
+}
+
+.saving span {
+  animation-name: blink;
+  animation-duration: 1.4s;
+  animation-iteration-count: infinite;
+  animation-fill-mode: both;
+}
+
+.saving span:nth-child(2) {
+  animation-delay: .2s;
+}
+
+.saving span:nth-child(3) {
+  animation-delay: .4s;
+}
+/*
+@-webkit-keyframes glowing {
+  0% { background-color: #fce703; }
+  50% { background-color: #fce303; }
+  100% { background-color: #fce703; }
+}
+
+@-moz-keyframes glowing {
+  0% { background-color: #fce703; }
+  50% { background-color: #fce303; }
+  100% { background-color: #fce703; }
+}
+
+@-o-keyframes glowing {
+  0% { background-color: #fce703; }
+  50% { background-color: #fce303; }
+  100% { background-color: #fce703; }
+}
+
+@keyframes glowing {
+  0% { background-color: #fce703; }
+  50% { background-color: #fce303; }
+  100% { background-color: #fce703; }
+}
+*/
