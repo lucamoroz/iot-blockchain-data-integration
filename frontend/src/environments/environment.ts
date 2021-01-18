@@ -7,7 +7,7 @@ export const environment = {
   blockChainAddressWS: 'ws://127.0.0.1:8545',
   blockChainAddressHttp: 'http://127.0.0.1:8545',
   dataFilterAddress: 'http://127.0.0.1',
-  contractAddress: '0x9adCcD671411003451CB2C81a1Bb0c1D1fEa1568',
+  contractAddress: '0x74bdcf0a467194a9290c4a4cd0f499acc22938f0',
   privateAccountKey: ''
 };
 

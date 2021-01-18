@@ -16,7 +16,7 @@
   <div class="tables">
     <div class="wind-table-button-wrapper">
       <div class="load-button-row">
-        <button class="load-new-button saving" (click)="addWindDataToTable()" >
+        <button class="load-new-button saving" (click)="addWindDataToTable()" *ngIf="windDataToLoad.length > 0">
           {{windDataToLoad.length + ' new item(s) to load'}} <span>.</span><span>.</span><span>.</span>
         </button>
       </div>
@@ -37,7 +37,7 @@
     </div>
     <div class="temperature-table-button-wrapper">
       <div class="load-button-row">
-        <button (click)="addTemperatureDataToTable()" *ngIf="temperatureDataToLoad.length > 0">
+        <button class="load-new-button saving" (click)="addTemperatureDataToTable()" *ngIf="temperatureDataToLoad.length > 0">
           {{temperatureDataToLoad.length + ' new item(s) to load'}}
         </button>
       </div>
@@ -60,9 +60,9 @@
     </div>
   </div>
   <div *ngIf="!!adminSelected">
-    <app-admin></app-admin>
+    <app-admin (filter)="setFilter($event)" [currentFilter]="currentFilter"></app-admin>
   </div>
   <div *ngIf="!!userSelected">
-    <app-user></app-user>
+    <app-user [notifications]="notifications"></app-user>
   </div>
 </div>

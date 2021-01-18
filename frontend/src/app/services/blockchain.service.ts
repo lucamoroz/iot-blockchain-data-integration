@@ -2,6 +2,8 @@ import {Injectable, isDevMode} from '@angular/core';
 import Web3 from 'web3';
 import {Subject} from 'rxjs';
 import { environment } from '../../environments/environment';
+import {AnemometerData} from '../model/anemometer-data';
+import {MultimeterData} from '../model/multiMeter-data';
 
 @Injectable({
   providedIn: 'root'
@@ -132,7 +134,12 @@ export class BlockchainService {
     this.contract.methods.getDataItem(index).call()
       .then(result => {
         console.log(JSON.parse(BlockchainService.hex2a(result).substring(1)));
-        this.blockChainSubject.next(JSON.parse(BlockchainService.hex2a(result).substring(1)));
+        const resultParsed = JSON.parse(BlockchainService.hex2a(result).substring(1));
+        const data: AnemometerData | MultimeterData = resultParsed.hasOwnProperty('humidity')
+          ? { time: resultParsed.time, humidity: resultParsed.humidity,
+            temperature: resultParsed.temperature, pressure: resultParsed.pressure}
+          : { time: resultParsed.time, windSpeed: resultParsed.windSpeed, windBearing: resultParsed.windBearing };
+        this.blockChainSubject.next(data);
       });
   }
 }
