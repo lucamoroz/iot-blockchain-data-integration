@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  dataFilterAddress: 'http://127.0.0.1',
+  dataFilterAddress: 'http://127.0.0.1'
 };
 
 /*

@@ -1,6 +1,13 @@
 version: '3'
 services:
 
+  frontend:
+    image: iotssg5ws2020/frontend:$DOCKER_TAG
+    depends_on:
+      - data-filter
+    ports:
+      - 8080:80
+
   # A demo fake sensor (Anemometer)
   fake-anemometer:
     image: iotssg5ws2020/fake-sensor:$DOCKER_TAG
@@ -53,7 +60,7 @@ services:
     networks:
       - default
     ports:
-      - "80:8080"
+      - "5000:8080"
 
   # Transfer MQTT to blockchain
   blockchain-publisher:
@@ -76,9 +83,6 @@ services:
     image: eclipse-mosquitto
     networks:
       - default
-    expose:
-      - "1883"
-      - "9001"
     ports:
       - "1883:1883"
       - "9001:9001"
