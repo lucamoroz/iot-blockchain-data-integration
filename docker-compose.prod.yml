@@ -6,7 +6,9 @@ services:
     depends_on:
       - data-filter
     ports:
-      - 8080:80
+      - 80:80
+    expose:
+      - 80
 
   # A demo fake sensor (Anemometer)
   fake-anemometer:
@@ -21,7 +23,7 @@ services:
       - CLIENT_ID=anemometer-1
       - FILES=./data/HomeA/homeA2014.csv ./data/HomeA/homeA2015.csv ./data/HomeA/homeA2016.csv
     volumes:
-      - ./fake-sensor/data:/app/data
+      - ./volumes/fake-sensor/data:/app/data
     depends_on:
       - message-broker
 
@@ -38,7 +40,7 @@ services:
       - CLIENT_ID=multimeter-1
       - FILES=./data/HomeA/homeA2014.csv ./data/HomeA/homeA2015.csv ./data/HomeA/homeA2016.csv
     volumes:
-      - ./fake-sensor/data:/app/data
+      - ./volumes/fake-sensor/data:/app/data
     depends_on:
       - message-broker
 
@@ -61,6 +63,8 @@ services:
       - default
     ports:
       - "5000:8080"
+    expose:
+      - 5000
 
   # Transfer MQTT to blockchain
   blockchain-publisher:
