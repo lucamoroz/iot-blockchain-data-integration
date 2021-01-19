@@ -7,9 +7,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import tuwien.models.BlockChainConfig;
 
+import java.util.logging.Logger;
+
 @RestController
 @RequestMapping("/config")
 public class ConfigController {
+    private final static Logger LOGGER = Logger.getLogger(ConfigController.class.getName());
+
     @Value("${BLOCKCHAIN_HOST_WS}")
     private String blockChainHostWs;
 
@@ -25,6 +29,8 @@ public class ConfigController {
 
     @GetMapping("blockchain")
     public BlockChainConfig getBlockchainConfig() {
+        LOGGER.info("Loading blockchain config for client");
+        
         BlockChainConfig config = new BlockChainConfig();
         config.setBlockChainAddressWS(blockChainHostWs);
         config.setBlockChainAddressHttp(blockChainHostHttp);

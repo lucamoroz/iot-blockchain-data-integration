@@ -15,6 +15,7 @@ export class ConfigService {
   }
 
   public init(): Promise<void> {
+    console.log('Loading blockchain config...');
     return this.getBlockChainConfig()
       .toPromise()
       .then(config => {
@@ -25,5 +26,9 @@ export class ConfigService {
 
   public getBlockChainConfig(): Observable<BlockchainConfig> {
     return this.http.get<BlockchainConfig>(environment.dataFilterAddress + '/config/blockchain');
+  }
+
+  public getBlockChainConfigSync(): BlockchainConfig {
+    return this.blockChainConfig;
   }
 }
