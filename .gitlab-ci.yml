@@ -22,7 +22,7 @@ build-blockchain-publisher:
   stage: build
   script:
     - echo "Building Blockchain Publisher Image"
-    - docker build -t iotssg5ws2020/blockchain-publisher:$CI_COMMIT_REF_SLUG ./data-filter
+    - docker build -t iotssg5ws2020/blockchain-publisher:$CI_COMMIT_REF_SLUG ./blockchain-publisher
     - docker push iotssg5ws2020/blockchain-publisher:$CI_COMMIT_REF_SLUG
 
 build-frontend:
