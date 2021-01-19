@@ -39,6 +39,7 @@ public class MultimeterController {
         return filter;
     }
 
+    @CrossOrigin
     @PostMapping("")
     MultimeterFilter updateMultimeterFilter(@RequestBody String body) {
         LOGGER.info(String.format("updateMultimeterFilter received %s", body));
