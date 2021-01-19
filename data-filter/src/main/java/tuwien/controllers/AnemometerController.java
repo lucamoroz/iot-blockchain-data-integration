@@ -22,6 +22,7 @@ public class AnemometerController {
         return filter;
     }
 
+    @CrossOrigin
     @PostMapping
     AnemometerFilter updateAnemometerFilter(@RequestBody String body) {
         LOGGER.info(String.format("updateAnemometerFilter received %s", body));
