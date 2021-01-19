@@ -20,7 +20,6 @@ export class ConfigService {
       .toPromise()
       .then(config => {
         this.blockChainConfig = config;
-        console.log('Blockchain config', config);
       });
   }
 

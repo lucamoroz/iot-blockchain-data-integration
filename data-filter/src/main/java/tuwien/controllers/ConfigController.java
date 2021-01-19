@@ -2,6 +2,7 @@ package tuwien.controllers;
 
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,15 +28,17 @@ public class ConfigController {
     private String privateAccountKey;
 
 
+    @CrossOrigin
     @GetMapping("blockchain")
     public BlockChainConfig getBlockchainConfig() {
         LOGGER.info("Loading blockchain config for client");
-        
+
         BlockChainConfig config = new BlockChainConfig();
         config.setBlockChainAddressWS(blockChainHostWs);
         config.setBlockChainAddressHttp(blockChainHostHttp);
         config.setContractAddress(contractAddress);
-        config.setPrivateAccountKey(privateAccountKey);
+        if (!"0".equals(privateAccountKey))
+            config.setPrivateAccountKey(privateAccountKey);
         return config;
     }
 }

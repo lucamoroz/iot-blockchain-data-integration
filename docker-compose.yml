@@ -55,7 +55,7 @@ services:
       - BLOCKCHAIN_HOST_WS=ws://127.0.0.1:8545
       - BLOCKCHAIN_HOST_HTTP=http://127.0.0.1:8545
       - BLOCKCHAIN_CONTRACT_ADDRESS=0x74bdcf0a467194a9290c4a4cd0f499acc22938f0
-      - BLOCKCHAIN_ACCOUNT_PRIVATE_KEY=null
+      - BLOCKCHAIN_ACCOUNT_PRIVATE_KEY=0
     networks:
       - default
     ports:
@@ -65,15 +65,15 @@ services:
   blockchain-publisher:
     build:
       context: ./blockchain-publisher
-      command: ./wait-for-it.sh $BLOCKCHAIN_HOST --
-        ./wait-for-it.sh message-broker:1883 --
-        python -u src/blockchain_publisher.py
-        --mqtt-host message-broker
-        --mqtt-port 1883
-        --blockchain-host "$BLOCKCHAIN_HOST"
-        --topic filtered
-        --contract-sol-path $CONTRACT_SOL_PATH
-        --account-private-key $ACCOUNT_PRIVATE_KEY
+    command: ./wait-for-it.sh $BLOCKCHAIN_HOST --
+      ./wait-for-it.sh message-broker:1883 --
+      python -u src/blockchain_publisher.py
+      --mqtt-host message-broker
+      --mqtt-port 1883
+      --blockchain-host "$BLOCKCHAIN_HOST"
+      --topic filtered
+      --contract-sol-path $CONTRACT_SOL_PATH
+      --account-private-key $ACCOUNT_PRIVATE_KEY
     depends_on:
       - message-broker
       - ganache
