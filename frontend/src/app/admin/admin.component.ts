@@ -20,6 +20,7 @@ export class AdminComponent implements OnInit {
     new EventEmitter<{multiMeter: MultimeterFilter; anemometer: AnemometerFilter}>();
   private subscriptions = new Subscription();
   public filterChanged = false;
+  public settingFilter = false;
   public comparerValues = ['Less', 'Less or Equal', 'Equal', 'Greater or Equal', 'Greater'];
   public filterForm: FormGroup = new FormGroup({
     windSpeedControl: new FormControl(20),
@@ -39,19 +40,20 @@ export class AdminComponent implements OnInit {
   };
   windBearingOptions: Options = {
     floor: 0,
-    ceil: 100
+    ceil: 500
   };
   humidityOptions: Options = {
     floor: 0,
-    ceil: 100
+    ceil: 10,
+    step: 0.1
   };
   temperatureOptions: Options = {
-    floor: 0,
-    ceil: 100
+    floor: -50,
+    ceil: 50
   };
   pressureOptions: Options = {
     floor: 0,
-    ceil: 100
+    ceil: 2000
   };
   private static getEnumFromString(value: string): Comparison  {
     switch (value) {
@@ -72,7 +74,7 @@ export class AdminComponent implements OnInit {
   private static getStringFromEnum(enumV: Comparison): string {
     switch (enumV) {
       case Comparison.LESS_OR_EQUAL:
-        return 'Less or Greater';
+        return 'Less or Equal';
       case Comparison.LESS:
         return 'Less';
       case Comparison.GREATER:
@@ -85,6 +87,7 @@ export class AdminComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.settingFilter = false;
     if (!!this.currentFilter) {
       this.filterForm.get('windBearingControl')
         .setValue(this.currentFilter.anemometer.windBearingConstraint.value);
@@ -107,6 +110,7 @@ export class AdminComponent implements OnInit {
       this.filterForm.get('pressureComparer')
         .setValue(AdminComponent.getStringFromEnum(this.currentFilter.multiMeter.pressureConstraint.comparison));
     }
+    this.settingFilter = true;
     this.subscriptions.add(
       this.filterForm.valueChanges.subscribe(_ => {
         this.filterChanged = true;

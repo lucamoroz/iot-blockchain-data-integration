@@ -6,6 +6,7 @@ import {AnemometerFilter} from './model/anemometer-filter';
 import {Comparison} from './model/comparison';
 import {AnemometerData} from './model/anemometer-data';
 import {MultimeterData} from './model/multiMeter-data';
+import {FilterService} from './services/filter.service';
 
 @Component({
   selector: 'app-root',
@@ -14,7 +15,7 @@ import {MultimeterData} from './model/multiMeter-data';
 })
 export class AppComponent implements OnInit, OnDestroy {
 
-  constructor(private blockChainService: BlockchainService) {
+  constructor(private blockChainService: BlockchainService, private filterService: FilterService) {
     this.blockChainSubject = blockChainService.blockChainData;
   }
   title = 'frontend';
@@ -27,16 +28,7 @@ export class AppComponent implements OnInit, OnDestroy {
   public notifications: string[] = [];
   public adminSelected = true;
   public userSelected = false;
-  public currentFilter: { multiMeter: MultimeterFilter, anemometer: AnemometerFilter } = {
-    multiMeter: {
-      temperatureConstraint: { value: 10, comparison: Comparison.EQUAL},
-      pressureConstraint: { value: 10, comparison: Comparison.EQUAL},
-      humidityConstraint: { value: 10, comparison: Comparison.EQUAL}},
-    anemometer: {
-      windBearingConstraint: { value: 10, comparison: Comparison.EQUAL},
-      windSpeedConstraint: { value: 10, comparison: Comparison.EQUAL}
-    }
-  };
+  public currentFilter: { multiMeter: MultimeterFilter, anemometer: AnemometerFilter } = null;
   private static checkValueAgainstComparor(value: number, otherValue: number, comparor: Comparison): boolean {
     switch (comparor) {
       case Comparison.EQUAL:
@@ -54,13 +46,13 @@ export class AppComponent implements OnInit, OnDestroy {
   private static getStringFromEnum(enumV: Comparison): string {
     switch (enumV) {
       case Comparison.LESS_OR_EQUAL:
-        return 'less or equal to ';
+        return 'less than or equal to ';
       case Comparison.LESS:
         return 'less than ';
       case Comparison.GREATER:
         return 'greater than ';
       case Comparison.GREATER_OR_EQUAL:
-        return 'greater or equal to ';
+        return 'greater than or equal to ';
       case Comparison.EQUAL:
         return 'equal to ';
     }
@@ -71,6 +63,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.currentFilter = this.filterService.getFilter();
     this.subscriptions.add(
       this.blockChainSubject.subscribe(x => {
         if (x.hasOwnProperty('humidity')) {
@@ -129,7 +122,7 @@ export class AppComponent implements OnInit, OnDestroy {
       this.notifications
         .push(
           'Wind Bearing '
-          + AppComponent.getStringFromEnum(filter.windSpeedConstraint.comparison) + ' ' + filter.windBearingConstraint.value);
+          + AppComponent.getStringFromEnum(filter.windBearingConstraint.comparison) + ' ' + filter.windBearingConstraint.value);
     }
     if (AppComponent
       .checkValueAgainstComparor(data.windSpeed, filter.windSpeedConstraint.value, filter.windSpeedConstraint.comparison)) {
@@ -140,5 +133,10 @@ export class AppComponent implements OnInit, OnDestroy {
   }
   setFilter($event: {multiMeter: MultimeterFilter; anemometer: AnemometerFilter}): void {
     this.currentFilter = { multiMeter: $event.multiMeter, anemometer: $event.anemometer };
+    const snack = document.getElementById('snackbar');
+
+
+    snack.className = 'show';
+    setTimeout(() => { snack.className = snack.className.replace('show', ''); }, 3000);
   }
 }
