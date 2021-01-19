@@ -1,7 +1,7 @@
 import {Injectable, isDevMode} from '@angular/core';
 import Web3 from 'web3';
 import {Subject} from 'rxjs';
-import { environment } from '../../environments/environment';
+import {environment} from '../../environments/environment';
 import {AnemometerData} from '../model/anemometer-data';
 import {MultimeterData} from '../model/multiMeter-data';
 
@@ -113,7 +113,7 @@ export class BlockchainService {
       .on('changed', (event) => {
         console.log('event: ' + event);
       })
-      .on('error', (error, receipt)  => {
+      .on('error', (error, receipt) => {
         console.log('error: ' + error);
         console.log('receipt: ' + receipt);
       });
@@ -122,13 +122,18 @@ export class BlockchainService {
   get blockChainData(): Subject<any> {
     return this.blockChainSubject;
   }
+
   private blockChainSubject = new Subject<any>();
   private contract;
+
   private static hex2a(hex): string {
     let str = '';
-    for (let i = 0; i < hex.length; i += 2) { str += String.fromCharCode(parseInt(hex.substr(i, 2), 16)); }
+    for (let i = 0; i < hex.length; i += 2) {
+      str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+    }
     return str;
   }
+
   private getDataFromBlockChain(index: number): void {
     console.log('getting Data');
     this.contract.methods.getDataItem(index).call()
@@ -136,9 +141,11 @@ export class BlockchainService {
         console.log(JSON.parse(BlockchainService.hex2a(result).substring(1)));
         const resultParsed = JSON.parse(BlockchainService.hex2a(result).substring(1));
         const data: AnemometerData | MultimeterData = resultParsed.hasOwnProperty('humidity')
-          ? { time: resultParsed.time, humidity: resultParsed.humidity,
-            temperature: resultParsed.temperature, pressure: resultParsed.pressure}
-          : { time: resultParsed.time, windSpeed: resultParsed.windSpeed, windBearing: resultParsed.windBearing };
+          ? {
+            time: resultParsed.time, humidity: resultParsed.humidity,
+            temperature: resultParsed.temperature, pressure: resultParsed.pressure
+          }
+          : {time: resultParsed.time, windSpeed: resultParsed.windSpeed, windBearing: resultParsed.windBearing};
         this.blockChainSubject.next(data);
       });
   }
