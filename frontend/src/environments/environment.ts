@@ -4,11 +4,7 @@
 
 export const environment = {
   production: false,
-  blockChainAddressWS: 'ws://127.0.0.1:8545',
-  blockChainAddressHttp: 'http://127.0.0.1:8545',
-  dataFilterAddress: 'http://127.0.0.1',
-  contractAddress: '0x2a889013ff5d6f8315659d4230ef128efa49075d',
-  privateAccountKey: ''
+  dataFilterAddress: 'http://127.0.0.1'
 };
 
 /*

@@ -1,11 +1,18 @@
 version: '3'
 services:
 
+  frontend:
+    image: iotssg5ws2020/frontend:$DOCKER_TAG
+    depends_on:
+      - data-filter
+    ports:
+      - 80:80
+    expose:
+      - 80
+
   # A demo fake sensor (Anemometer)
   fake-anemometer:
-    build:
-      context: ./fake-sensor
-      dockerfile: ./Dockerfile
+    image: iotssg5ws2020/fake-sensor:$DOCKER_TAG
     environment:
       - HOST=message-broker
       - PORT=1883
@@ -16,15 +23,13 @@ services:
       - CLIENT_ID=anemometer-1
       - FILES=./data/HomeA/homeA2014.csv ./data/HomeA/homeA2015.csv ./data/HomeA/homeA2016.csv
     volumes:
-      - ./fake-sensor/data:/app/data
+      - ./volumes/fake-sensor/data:/app/data
     depends_on:
       - message-broker
 
   # A demo fake sensor (Anemometer)
   fake-multimeter:
-    build:
-      context: ./fake-sensor
-      dockerfile: ./Dockerfile
+    image: iotssg5ws2020/fake-sensor:$DOCKER_TAG
     environment:
       - HOST=message-broker
       - PORT=1883
@@ -35,15 +40,13 @@ services:
       - CLIENT_ID=multimeter-1
       - FILES=./data/HomeA/homeA2014.csv ./data/HomeA/homeA2015.csv ./data/HomeA/homeA2016.csv
     volumes:
-      - ./fake-sensor/data:/app/data
+      - ./volumes/fake-sensor/data:/app/data
     depends_on:
       - message-broker
 
   # Data Filter
   data-filter:
-    build:
-      context: ./data-filter
-      dockerfile: ./Dockerfile
+    image: iotssg5ws2020/data-filter:$DOCKER_TAG
     environment:
       - MQTT_HOST=message-broker
       - MQTT_ANEMOMETER_TOPIC=/+/anemometer
@@ -52,19 +55,20 @@ services:
       - MQTT_MULTIMETER_FILTERED_TOPIC=filtered
       - MQTT_ELECTRICAL_TOPIC=/+/electrical
       - MQTT_ELECTRICAL_FILTERED_TOPIC=filtered
-      - BLOCKCHAIN_HOST_WS=ws://127.0.0.1:8545
-      - BLOCKCHAIN_HOST_HTTP=http://127.0.0.1:8545
-      - BLOCKCHAIN_CONTRACT_ADDRESS=0x74bdcf0a467194a9290c4a4cd0f499acc22938f0
-      - BLOCKCHAIN_ACCOUNT_PRIVATE_KEY=0
+      - BLOCKCHAIN_HOST_WS=$BLOCKCHAIN_HOST_WS
+      - BLOCKCHAIN_HOST_HTTP=$BLOCKCHAIN_HOST
+      - BLOCKCHAIN_CONTRACT_ADDRESS=$CONTRACT_ADDRESS
+      - BLOCKCHAIN_ACCOUNT_PRIVATE_KEY=$ACCOUNT_PRIVATE_KEY
     networks:
       - default
     ports:
-      - "80:8080"
+      - "5000:8080"
+    expose:
+      - 5000
 
   # Transfer MQTT to blockchain
   blockchain-publisher:
-    build:
-      context: ./blockchain-publisher
+    image: iotssg5ws2020/blockchain-publisher:$DOCKER_TAG
     command: ./wait-for-it.sh $BLOCKCHAIN_HOST --
       ./wait-for-it.sh message-broker:1883 --
       python -u src/blockchain_publisher.py
@@ -72,33 +76,19 @@ services:
       --mqtt-port 1883
       --blockchain-host "$BLOCKCHAIN_HOST"
       --topic filtered
-      --contract-sol-path $CONTRACT_SOL_PATH
+      --contract-abi-path $CONTRACT_ABI_PATH
+      --contract-address $CONTRACT_ADDRESS
       --account-private-key $ACCOUNT_PRIVATE_KEY
     depends_on:
       - message-broker
-      - ganache
-
-  # Ethereum blockchain
-  ganache:
-    image: trufflesuite/ganache-cli
-    command: --mnemonic diamond smart face permit sock element exclude loan december
-    expose:
-      - 8545
-    ports:
-      - 8545:8545
 
   # MQTT Broker
   message-broker:
     image: eclipse-mosquitto
     networks:
       - default
-    expose:
-      - "1883"
-      - "9001"
     ports:
       - "1883:1883"
       - "9001:9001"
     volumes:
       - ./volumes/mosquitto/config:/mosquitto/config
-      - ./volumes/mosquitto/data:/mosquitto/data
-      - ./volumes/mosquitto/log:/mosquitto/log
