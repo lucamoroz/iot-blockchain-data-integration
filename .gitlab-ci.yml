@@ -30,5 +30,5 @@ build-frontend:
   stage: build
   script:
     - echo "Building Frontend Image"
-    - docker build -t iotssg5ws2020/frontend:$CI_COMMIT_REF_SLUG ./fronend
+    - docker build -t iotssg5ws2020/frontend:$CI_COMMIT_REF_SLUG ./frontend
     - docker push iotssg5ws2020/frontend:$CI_COMMIT_REF_SLUG
