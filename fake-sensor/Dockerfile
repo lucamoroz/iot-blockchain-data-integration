@@ -11,7 +11,7 @@ RUN pip install -r /app/requirements.txt
 
 COPY src/. .
 
-COPY data/. .
+COPY data/. ./data/.
 
 RUN chmod +x ./entrypoint.sh
 
