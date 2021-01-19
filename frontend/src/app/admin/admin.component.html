@@ -1,0 +1,77 @@
+<div class="filter-wrapper">
+  <form [formGroup]="filterForm">
+    <div class="apply-filter-wrapper">
+      <button class="apply-filter-button" (click)="applyFilter()" [disabled]="!this.filterChanged">
+        Apply filter
+      </button>
+    </div>
+    <div class="wind-speed filter-section">
+      <div>
+        Wind Speed
+      </div>
+      <div class="select-container">
+        <label>
+          <select formControlName="windSpeedComparer">
+            <option *ngFor="let comp of comparerValues"
+                    [attr.selected]="comp==filterForm.get('windSpeedComparer').value ? 'selected' : 'null'">{{comp}}</option>
+          </select>
+        </label>
+      </div>
+      <div>
+        <ngx-slider [options]="windSpeedOptions" formControlName="windSpeedControl"></ngx-slider>
+      </div>
+    </div>
+    <div class="wind-bearing filter-section">
+      <div>
+        Wind Bearing
+      </div>
+      <div class="select-container">
+        <label>
+          <select formControlName="windBearingComparer">
+            <option *ngFor="let comp of comparerValues">{{comp}}</option>
+          </select>
+        </label>
+      </div>
+      <ngx-slider [options]="windBearingOptions" formControlName="windBearingControl"></ngx-slider>
+    </div>
+    <div class="humidity filter-section">
+      <div>
+        Humidity
+      </div>
+      <div class="select-container">
+        <label>
+          <select formControlName="humidityComparer">
+            <option *ngFor="let comp of comparerValues">{{comp}}</option>
+          </select>
+        </label>
+      </div>
+      <ngx-slider [options]="humidityOptions" formControlName="humidityControl"></ngx-slider>
+    </div>
+    <div class="temperature filter-section">
+      <div>
+        Temperature
+      </div>
+      <div class="select-container">
+        <label>
+          <select formControlName="temperatureComparer">
+            <option *ngFor="let comp of comparerValues">{{comp}}</option>
+          </select>
+        </label>
+      </div>
+      <ngx-slider [options]="temperatureOptions" formControlName="temperatureControl"></ngx-slider>
+    </div>
+    <div class="pressure filter-section">
+      <div>
+        Pressure
+      </div>
+      <div class="select-container">
+        <label>
+          <select formControlName="pressureComparer">
+            <option *ngFor="let comp of comparerValues">{{comp}}</option>
+          </select>
+        </label>
+      </div>
+      <ngx-slider [options]="pressureOptions" formControlName="pressureControl"></ngx-slider>
+    </div>
+  </form>
+</div>

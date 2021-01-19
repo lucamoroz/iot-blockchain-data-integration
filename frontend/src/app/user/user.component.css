@@ -1,0 +1,18 @@
+.notification-wrapper{
+  border: 2px solid black;
+  min-width: 20em;
+  margin: 0 0.5em;
+  padding: 0 0.75em 0.75em 0.75em;
+  font-size: 16px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.list-item{
+  padding: 0.75em 0;
+
+}
+
+.not-Last{
+  border-bottom: 1px solid black;
+}
+
