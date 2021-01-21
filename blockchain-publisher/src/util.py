@@ -8,6 +8,9 @@ from web3 import Web3
 
 
 def compile_source_file(file_path):
+    """Read and compile the source file with the solc Solidity compiler.
+    If the compiler is not available, it will be installed.
+    """
     # Check if solc compiler is available otherwise install
     try:
         print(solcx.get_solc_version())
@@ -29,8 +32,10 @@ def write_abi(abi, output_path):
     return output_path
 
 
-def deploy_contract(w3, blockchain_host, contract_file_path, account):
-
+def deploy_contract(w3, contract_file_path, account):
+    """Deploy the contract by compiling the source file, creating the contract transaction, 
+    signing it with the given account and sending it.
+    """
     # Compile
     compiled_sol = compile_source_file(contract_file_path)
 
@@ -47,7 +52,7 @@ def deploy_contract(w3, blockchain_host, contract_file_path, account):
 
     signed_txn = w3.eth.account.sign_transaction(txn, account.privateKey)
     tx_hash = w3.eth.sendRawTransaction(signed_txn.rawTransaction)
-    tx_receipt = w3.eth.getTransactionReceipt(tx_hash)
+    tx_receipt = w3.eth.waitForTransactionReceipt(tx_hash)
 
     address = tx_receipt['contractAddress']
     print(

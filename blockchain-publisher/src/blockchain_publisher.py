@@ -25,8 +25,7 @@ class BlockchainPublisher:
             with open(contract_abi_path, 'r') as f:
                 contract_abi = f.read()
         elif contract_sol_path is not None:
-            contract_address, contract_abi = deploy_contract(self._w3,
-                blockchain_host, contract_sol_path, self._account)
+            contract_address, contract_abi = deploy_contract(self._w3, contract_sol_path, self._account)
         else:
             print(
                 'Either contract-abi-path and contract-address must be given or the contract-sol-path!')
