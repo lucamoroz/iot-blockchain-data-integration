@@ -54,8 +54,8 @@ services:
       - MQTT_ELECTRICAL_FILTERED_TOPIC=filtered
       - BLOCKCHAIN_HOST_WS=ws://127.0.0.1:8545
       - BLOCKCHAIN_HOST_HTTP=http://127.0.0.1:8545
-      - BLOCKCHAIN_CONTRACT_ADDRESS=0x74bdcf0a467194a9290c4a4cd0f499acc22938f0
-      - BLOCKCHAIN_ACCOUNT_PRIVATE_KEY=0
+      - BLOCKCHAIN_CONTRACT_ADDRESS=0x491Db2723d96a763B554226CB510781b3bB5a8d0  # Due to ganache mnemonic it should stay the say
+      - BLOCKCHAIN_ACCOUNT_PRIVATE_KEY=$ACCOUNT_PRIVATE_KEY # same here
     networks:
       - default
     ports:
