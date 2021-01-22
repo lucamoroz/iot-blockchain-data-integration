@@ -1,1 +1,1 @@
-{"windSpeedConstraint":{"value":5,"comparison":"GREATER_OR_EQUAL"},"windBearingConstraint":{"value":250,"comparison":"GREATER_OR_EQUAL"}}
+{"windSpeedConstraint":{"value":178,"comparison":"GREATER_OR_EQUAL"},"windBearingConstraint":{"value":0,"comparison":"GREATER_OR_EQUAL"}}

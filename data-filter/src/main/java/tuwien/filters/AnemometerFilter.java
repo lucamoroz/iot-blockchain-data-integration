@@ -69,7 +69,7 @@ public class AnemometerFilter {
     }
 
     private void loadDefaultFilter() {
-        this.windSpeedConstraint = new NumberConstraint(10, Comparison.GREATER_OR_EQUAL);
-        this.windBearingConstraint = new NumberConstraint(300, Comparison.GREATER_OR_EQUAL);
+        this.windSpeedConstraint = new NumberConstraint(178, Comparison.GREATER_OR_EQUAL);
+        this.windBearingConstraint = new NumberConstraint(0, Comparison.GREATER_OR_EQUAL);
     }
 }
