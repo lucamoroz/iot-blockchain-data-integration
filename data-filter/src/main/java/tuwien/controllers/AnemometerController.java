@@ -16,6 +16,7 @@ public class AnemometerController {
     @Autowired
     AnemometerFilter filter;
 
+    @CrossOrigin
     @GetMapping("")
     AnemometerFilter getAnemometerFilter() {
         // Automatically serialized to JSON

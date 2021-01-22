@@ -84,11 +84,9 @@ services:
 
   # MQTT Broker
   message-broker:
-    image: eclipse-mosquitto
+    image: iotssg5ws2020/broker:$DOCKER_TAG
     networks:
       - default
     ports:
       - "1883:1883"
       - "9001:9001"
-    volumes:
-      - ./volumes/mosquitto/config:/mosquitto/config
