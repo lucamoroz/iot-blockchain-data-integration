@@ -91,4 +91,8 @@ You can run all docker containers locally with the environment file for developm
 or run each sub project directly on your host by checking out the README files there.
 
 ## Contributions
-- Luca Moroldo: data-filter
+
+- Luca Moroldo: mainly data-filter (middleware)
+- Konstantin Strümpf: mainly fake-sensors (data provider)
+- David Kirchsteiger: mainly blockchain-publisher (middleware)
+- Samir Duvelek: mainly frontend (user interface)
