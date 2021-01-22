@@ -1,11 +1,18 @@
 version: '3'
 services:
 
+  frontend:
+    image: iotssg5ws2020/frontend:$DOCKER_TAG
+    depends_on:
+      - data-filter
+    ports:
+      - 80:80
+    expose:
+      - 80
+
   # A demo fake sensor (Anemometer)
   fake-anemometer:
-    build:
-      context: ./fake-sensor
-      dockerfile: ./Dockerfile
+    image: iotssg5ws2020/fake-sensor:$DOCKER_TAG
     environment:
       - HOST=message-broker
       - PORT=1883
@@ -22,9 +29,7 @@ services:
 
   # A demo fake sensor (Anemometer)
   fake-multimeter:
-    build:
-      context: ./fake-sensor
-      dockerfile: ./Dockerfile
+    image: iotssg5ws2020/fake-sensor:$DOCKER_TAG
     environment:
       - HOST=message-broker
       - PORT=1883
@@ -41,9 +46,7 @@ services:
 
   # Data Filter
   data-filter:
-    build:
-      context: ./data-filter
-      dockerfile: ./Dockerfile
+    image: iotssg5ws2020/data-filter:$DOCKER_TAG
     environment:
       - MQTT_HOST=message-broker
       - MQTT_ANEMOMETER_TOPIC=/+/anemometer
@@ -52,40 +55,38 @@ services:
       - MQTT_MULTIMETER_FILTERED_TOPIC=filtered
       - MQTT_ELECTRICAL_TOPIC=/+/electrical
       - MQTT_ELECTRICAL_FILTERED_TOPIC=filtered
+      - BLOCKCHAIN_HOST_WS=$BLOCKCHAIN_HOST_WS
+      - BLOCKCHAIN_HOST_HTTP=$BLOCKCHAIN_HOST
+      - BLOCKCHAIN_CONTRACT_ADDRESS=$CONTRACT_ADDRESS
+      - BLOCKCHAIN_ACCOUNT_PRIVATE_KEY=$ACCOUNT_PRIVATE_KEY
     networks:
       - default
     ports:
-      - "80:8080"
+      - "5000:8080"
+    expose:
+      - 5000
 
   # Transfer MQTT to blockchain
   blockchain-publisher:
-    build:
-      context: ./blockchain-publisher
+    image: iotssg5ws2020/blockchain-publisher:$DOCKER_TAG
     command: ./wait-for-it.sh $BLOCKCHAIN_HOST --
-             ./wait-for-it.sh message-broker:1883 --
-             python -u src/blockchain_publisher.py
-              --mqtt-host message-broker
-              --mqtt-port 1883
-              --blockchain-host "$BLOCKCHAIN_HOST"
-              --topic filtered
-              --contract-abi-path $CONTRACT_ABI_PATH
-              --contract-address $CONTRACT_ADDRESS
-              --account-private-key $ACCOUNT_PRIVATE_KEY
+      ./wait-for-it.sh message-broker:1883 --
+      python -u src/blockchain_publisher.py
+      --mqtt-host message-broker
+      --mqtt-port 1883
+      --blockchain-host "$BLOCKCHAIN_HOST"
+      --topic filtered
+      --contract-abi-path $CONTRACT_ABI_PATH
+      --contract-address $CONTRACT_ADDRESS
+      --account-private-key $ACCOUNT_PRIVATE_KEY
     depends_on:
       - message-broker
 
   # MQTT Broker
   message-broker:
-    image: eclipse-mosquitto
+    image: iotssg5ws2020/broker:$DOCKER_TAG
     networks:
       - default
-    expose:
-      - "1883"
-      - "9001"
     ports:
       - "1883:1883"
       - "9001:9001"
-    volumes:
-      - ./volumes/mosquitto/config:/mosquitto/config
-      - ./volumes/mosquitto/data:/mosquitto/data
-      - ./volumes/mosquitto/log:/mosquitto/log
