@@ -36,15 +36,15 @@ export class AdminComponent implements OnInit {
   });
   windSpeedOptions: Options = {
     floor: 0,
-    ceil: 100
+    ceil: 250
   };
   windBearingOptions: Options = {
     floor: 0,
-    ceil: 500
+    ceil: 360
   };
   humidityOptions: Options = {
     floor: 0,
-    ceil: 10,
+    ceil: 1,
     step: 0.1
   };
   temperatureOptions: Options = {
