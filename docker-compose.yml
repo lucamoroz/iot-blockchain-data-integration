@@ -73,6 +73,8 @@ services:
       - default
     ports:
       - "80:8080"
+    volumes:
+      - ./data-filter/filters:/app/filters
 
   # Transfer MQTT to blockchain
   blockchain-publisher:

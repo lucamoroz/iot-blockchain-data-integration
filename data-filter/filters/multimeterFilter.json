@@ -1,0 +1,1 @@
+{"temperatureConstraint":{"value":5,"comparison":"GREATER_OR_EQUAL"},"humidityConstraint":{"value":1,"comparison":"LESS"},"pressureConstraint":{"value":5,"comparison":"GREATER"}}
