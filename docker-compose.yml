@@ -51,25 +51,6 @@ services:
       - ./fake-sensor/data:/app/data
     depends_on:
       - message-broker
-  
-  # A demo fake sensor replaying fake hurricane data
-  fake-hurricane-anemometer:
-    build:
-      context: ./fake-sensor
-      dockerfile: ./Dockerfile
-    environment:
-      - HOST=message-broker
-      - PORT=1883
-      - TOPIC=/homea/anemometer
-      - REPLAY_SPEED=1.0
-      - COLUMNS=windSpeed windBearing
-      - KEEP_CONNECTION=5
-      - CLIENT_ID=hurricane-anemometer
-      - FILES=./data/presentation/hurricane.csv
-    volumes:
-      - ./fake-sensor/data:/app/data
-    depends_on:
-      - message-broker
 
   # Data Filter
   data-filter:
