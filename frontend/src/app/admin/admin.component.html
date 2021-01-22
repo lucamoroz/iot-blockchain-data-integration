@@ -1,5 +1,8 @@
 <ng-container *ngIf="settingFilter">
   <div class="filter-wrapper">
+    <div class="explain">
+      Set the requirements that need to be met, so the data is persistently stored
+    </div>
     <form [formGroup]="filterForm">
       <div class="apply-filter-wrapper">
         <button class="apply-filter-button" (click)="applyFilter()" [disabled]="!this.filterChanged">
