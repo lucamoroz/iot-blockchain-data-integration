@@ -1,0 +1,71 @@
+<ng-container *ngIf="!!currentFilter">
+  <div class="admin-user-switch-row">
+    <div class="btn-group">
+      <span>
+        <button class="button" (click)="selectAdmin()" [ngClass]="!!adminSelected?'admin-button':'highlight'">
+          Admin
+        </button>
+      </span>
+      <span>
+        <button class="button" (click)="selectUser()" [ngClass]="!!userSelected?'user-button':'highlight'">
+          User
+        </button>
+      </span>
+    </div>
+  </div>
+  <div class="wrapper">
+    <div class="tables">
+      <div class="wind-table-button-wrapper">
+        <div class="load-button-row">
+          <button class="load-new-button saving" (click)="addWindDataToTable()" *ngIf="windDataToLoad.length > 0">
+            {{windDataToLoad.length + ' new item(s) to load'}} <span>.</span><span>.</span><span>.</span>
+          </button>
+        </div>
+        <div class="table-wrapper">
+          <table>
+            <tr>
+              <th [ngClass]="!!adminSelected?'admin-tab':'user-tab'">Time</th>
+              <th [ngClass]="!!adminSelected?'admin-tab':'user-tab'">Wind Speed</th>
+              <th [ngClass]="!!adminSelected?'admin-tab':'user-tab'">Wind Bearing</th>
+            </tr>
+            <tr *ngFor="let data of windDataToDisplay">
+              <td>{{data.time}}</td>
+              <td>{{data.windSpeed}}</td>
+              <td>{{data.windBearing}}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <div class="temperature-table-button-wrapper">
+        <div class="load-button-row">
+          <button class="load-new-button saving" (click)="addTemperatureDataToTable()" *ngIf="temperatureDataToLoad.length > 0">
+            {{temperatureDataToLoad.length + ' new item(s) to load'}}
+          </button>
+        </div>
+        <div class="table-wrapper">
+          <table>
+            <tr>
+              <th [ngClass]="!!adminSelected?'admin-tab':'user-tab'">Time</th>
+              <th [ngClass]="!!adminSelected?'admin-tab':'user-tab'">Humidity</th>
+              <th [ngClass]="!!adminSelected?'admin-tab':'user-tab'">Temperature</th>
+              <th [ngClass]="!!adminSelected?'admin-tab':'user-tab'">Pressure</th>
+            </tr>
+            <tr *ngFor="let data of temperatureDataToDisplay">
+              <td>{{data.time}}</td>
+              <td>{{data.humidity}}</td>
+              <td>{{data.temperature}}</td>
+              <td>{{data.pressure}}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="!!adminSelected">
+      <app-admin (filter)="setFilter($event)" [currentFilter]="currentFilter"></app-admin>
+    </div>
+    <div *ngIf="!!userSelected">
+      <app-user [notifications]="notifications"></app-user>
+    </div>
+  </div>
+</ng-container>
+<div id="snackbar">New filter applied!</div>

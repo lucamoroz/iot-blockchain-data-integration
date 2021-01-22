@@ -5,19 +5,34 @@ import datetime
 import sys
 
 from web3 import Web3
+from util import compile_source_file, write_abi, deploy_contract
 import paho.mqtt.client as mqtt
-from deploy_contract import deploy_contract
 
 
 class BlockchainPublisher:
 
-    def __init__(self, mqtt_host, mqtt_port, mqtt_topic, blockchain_host, contract_address, contract_abi):
+    def __init__(self, mqtt_host, mqtt_port, mqtt_topic, blockchain_host, account_prv_key, contract_sol_path=None, contract_address=None, contract_abi_path=None):
         self._mqtt_client = BlockchainPublisher.init_mqtt_client(
             mqtt_host, mqtt_port, mqtt_topic, self.handle_message)
         self._w3 = Web3(Web3.HTTPProvider(blockchain_host))
-        self._w3.eth.defaultAccount = self._w3.eth.accounts[0]
+
+        self._account = self._w3.eth.account.privateKeyToAccount(account_prv_key)
+
+        print(f'Using account {self._account.address}')
+
+        # Deploy if no ABI and address is given
+        if contract_abi_path is not None and contract_address is not None:
+            with open(contract_abi_path, 'r') as f:
+                contract_abi = f.read()
+        elif contract_sol_path is not None:
+            contract_address, contract_abi = deploy_contract(self._w3, contract_sol_path, self._account)
+        else:
+            print(
+                'Either contract-abi-path and contract-address must be given or the contract-sol-path!')
+            sys.exit(1)
+
         self._contract = self._w3.eth.contract(
-            address=contract_address, abi=contract_abi)
+            address=self._w3.toChecksumAddress(contract_address), abi=contract_abi)
 
     @staticmethod
     def init_mqtt_client(mqtt_host, mqtt_port, mqtt_topic, on_message):
@@ -29,10 +44,17 @@ class BlockchainPublisher:
 
     def handle_message(self, client, userdata, msg):
         print(f'[{datetime.datetime.now()}] {msg.topic} {msg.payload}', end='')
-    
-        tx_hash = self._contract.functions.addDataItem(msg.payload).transact()
+
+        nonce = self._w3.eth.getTransactionCount(self._account.address)
+        txn = self._contract.functions.addDataItem(msg.payload).buildTransaction(
+            {'gas': 200000, 'gasPrice': self._w3.toWei('1', 'gwei'), 'nonce': nonce})
+        signed_txn = self._w3.eth.account.sign_transaction(txn, private_key=self._account.privateKey)
+        tx_hash = self._w3.eth.sendRawTransaction(signed_txn.rawTransaction)
         tx_receipt = self._w3.eth.waitForTransactionReceipt(tx_hash)
+
         print(f' -> {tx_receipt.gasUsed} {tx_receipt.transactionHash.hex()}')
+
+ 
 
     def run(self):
         print('Running loop forever...')
@@ -51,44 +73,32 @@ def parse_args():
     arg_parser.add_argument('--blockchain-host', type=str, required=True,
                             help='the hostname of the Blockchain where the data will be published to')
     arg_parser.add_argument('--contract-sol-path', type=str,
-                            help='the file path to the source file of the contract in use. Note: Either contract-abi-path and contract-address must be given or the contract-sol-path. If only the source path is given, the program will deploy the contract first to the blockchain.')
+                            help='The file path to the source .sol-file of the contract in use. Note: Either contract-abi-path and contract-address must be given or the contract-sol-path. If only the source path is given, the program will deploy the contract first to the blockchain.')
     arg_parser.add_argument('--contract-abi-path', type=str,
                             help='the file path to the abi file of the contract in use')
     arg_parser.add_argument('--contract-address', type=str,
-                            help='the address of the contract in use')
+                            help='The address of the contract in use')
+    arg_parser.add_argument('--account-private-key', type=str,
+                            help='The private key of the account to use.')
 
     return arg_parser.parse_args()
 
 
-def main():
+
+if __name__ == '__main__':
 
     args = parse_args()
 
-    mqtt_host = args.mqtt_host
-    mqtt_port = args.mqtt_port
-    mqtt_topic = args.topic
-    blockchain_host = args.blockchain_host
-    contract_sol_path = args.contract_sol_path
-    contract_abi_path = args.contract_abi_path
-    contract_address = args.contract_address
+    print(f'ARGS: {args}')
 
-    # Deploy if no ABI or address is given
-    if contract_abi_path is None or contract_address is None:
-        if contract_sol_path:
-            contract_address, contract_abi = deploy_contract(
-                blockchain_host, contract_sol_path)
-        else:
-            print(
-                'Either contract-abi-path and contract-address must be given or the contract-sol-path!')
-            sys.exit(1)
-    else:
-        with open(contract_abi_path, 'r') as f:
-            contract_abi = f.read()
+    pub = BlockchainPublisher(args.mqtt_host,
+                              args.mqtt_port,
+                              args.topic,
+                              args.blockchain_host,
+                              args.account_private_key,
+                              args.contract_sol_path,
+                              args.contract_address,
+                              args.contract_abi_path)
 
-    pub = BlockchainPublisher(mqtt_host, mqtt_port,
-                              mqtt_topic, blockchain_host, contract_address, contract_abi)
     pub.run()
 
-
-if __name__ == '__main__':
-    main()

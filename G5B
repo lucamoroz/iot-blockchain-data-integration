@@ -1,19 +1,6 @@
 version: '3'
 services:
 
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: ./Dockerfile
-      args:
-        configuration: ''
-    depends_on:
-      - data-filter
-    ports:
-      - 8080:80
-    expose:
-      - 8080
-
   # A demo fake sensor (Anemometer)
   fake-anemometer:
     build:
@@ -65,42 +52,27 @@ services:
       - MQTT_MULTIMETER_FILTERED_TOPIC=filtered
       - MQTT_ELECTRICAL_TOPIC=/+/electrical
       - MQTT_ELECTRICAL_FILTERED_TOPIC=filtered
-      - BLOCKCHAIN_HOST_WS=ws://127.0.0.1:8545
-      - BLOCKCHAIN_HOST_HTTP=http://127.0.0.1:8545
-      - BLOCKCHAIN_CONTRACT_ADDRESS=0x491Db2723d96a763B554226CB510781b3bB5a8d0  # Due to ganache mnemonic it should stay the say
-      - BLOCKCHAIN_ACCOUNT_PRIVATE_KEY=$ACCOUNT_PRIVATE_KEY # same here
     networks:
       - default
     ports:
       - "80:8080"
-    volumes:
-      - ./data-filter/filters:/app/filters
 
   # Transfer MQTT to blockchain
   blockchain-publisher:
     build:
       context: ./blockchain-publisher
     command: ./wait-for-it.sh $BLOCKCHAIN_HOST --
-      ./wait-for-it.sh message-broker:1883 --
-      python -u src/blockchain_publisher.py
-      --mqtt-host message-broker
-      --mqtt-port 1883
-      --blockchain-host "$BLOCKCHAIN_HOST"
-      --topic filtered
-      --contract-sol-path $CONTRACT_SOL_PATH
-      --account-private-key $ACCOUNT_PRIVATE_KEY
+             ./wait-for-it.sh message-broker:1883 --
+             python -u src/blockchain_publisher.py
+              --mqtt-host message-broker
+              --mqtt-port 1883
+              --blockchain-host "$BLOCKCHAIN_HOST"
+              --topic filtered
+              --contract-abi-path $CONTRACT_ABI_PATH
+              --contract-address $CONTRACT_ADDRESS
+              --account-private-key $ACCOUNT_PRIVATE_KEY
     depends_on:
       - message-broker
-      - ganache
-
-  # Ethereum blockchain
-  ganache:
-    image: trufflesuite/ganache-cli
-    command: --mnemonic diamond smart face permit sock element exclude loan december
-    expose:
-      - 8545
-    ports:
-      - 8545:8545
 
   # MQTT Broker
   message-broker:

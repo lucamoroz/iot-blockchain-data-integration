@@ -72,9 +72,28 @@ while [[ $# -gt 0 ]]
 do
     case "$1" in
         *:* )
-        WAITFORIT_hostport=(${1//:/ })
-        WAITFORIT_HOST=${WAITFORIT_hostport[0]}
-        WAITFORIT_PORT=${WAITFORIT_hostport[1]}
+        URI=$1
+        URI="${URI//:/ }"
+        URI=(${URI//\// })
+        if  [[ ${URI[0]} == http* ]] ;
+        then
+            WAITFORIT_HOST=${URI[1]}
+            WAITFORIT_PORT=${URI[2]}
+        else
+            WAITFORIT_HOST=${URI[0]}
+            WAITFORIT_PORT=${URI[1]}
+        fi
+        re='^[0-9]+$'
+        if ! [[ $WAITFORIT_PORT =~ $re ]] ; then
+            case "${URI[0]}" in
+                https )
+                WAITFORIT_PORT=443
+                ;;
+                http )
+                WAITFORIT_PORT=80
+                ;;
+            esac        
+        fi
         shift 1
         ;;
         --child)

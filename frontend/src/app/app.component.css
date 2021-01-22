@@ -1,0 +1,216 @@
+table{
+  max-width: 40em;
+  min-width: 30em;
+  width: 100%;
+}
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+th, td {
+  padding: 5px;
+}
+th {
+  text-align: left;
+}
+.load-button-row{
+  height: 3em;
+}
+
+.wind-table-button-wrapper{
+  margin: 0 0.5em;
+}
+
+.temperature-table-button-wrapper{
+  margin: 0 0.5em;
+}
+
+.wrapper{
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.tables{
+  display: flex;
+  flex-wrap: wrap;
+  font-weight: normal;
+}
+
+table {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+table td, table th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+table tr:nth-child(even){background-color: #f2f2f2;}
+
+table tr:hover {background-color: #ddd;}
+
+table th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  color: white;
+}
+
+table .admin-tab{
+  background-color: #5a96bf;
+}
+
+table .user-tab{
+  background-color: #c96c61;
+}
+
+.admin-user-switch-row {
+  display: flex;
+  justify-content: center;
+  padding-bottom: 1em;
+}
+
+.btn-group .button {
+  background-color: #96a0a8;
+  border: 1px solid #47494a;
+  color: white;
+  padding: 0.5em 1.5em;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+  float: left;
+}
+
+.btn-group .button:not(:last-child) {
+  border-right: none; /* Prevent double borders */
+}
+
+.btn-group .highlight:hover {
+  background-color: #9fa6ab;
+}
+
+.load-new-button{
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  border: 2px solid black;
+  color: black;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 15px;
+  padding: 0.4em 0.9em;
+  text-align: center;
+  text-decoration: none;
+  -webkit-animation: glowing 3000ms infinite;
+  -moz-animation: glowing 3000ms infinite;
+  -o-animation: glowing 3000ms infinite;
+  animation: glowing 3000ms infinite;
+}
+
+.btn-group .admin-button {
+  background-color: #5a96bf;
+}
+
+.btn-group .user-button {
+  background-color: #c96c61;
+}
+
+@keyframes blink {
+  0% {
+    opacity: .2;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    opacity: .2;
+  }
+}
+
+.saving span {
+  animation-name: blink;
+  animation-duration: 1.4s;
+  animation-iteration-count: infinite;
+  animation-fill-mode: both;
+}
+
+.saving span:nth-child(2) {
+  animation-delay: .2s;
+}
+
+.saving span:nth-child(3) {
+  animation-delay: .4s;
+}
+
+#snackbar {
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  visibility: hidden; /* Hidden by default. Visible on click */
+  min-width: 250px; /* Set a default minimum width */
+  margin-left: -125px; /* Divide value of min-width by 2 */
+  background-color: #333; /* Black background color */
+  color: #fff; /* White text color */
+  text-align: center; /* Centered text */
+  padding: 16px; /* Padding */
+  position: fixed; /* Sit on top of the screen */
+  z-index: 1; /* Add a z-index if needed */
+  left: 50%; /* Center the snackbar */
+  bottom: 30px; /* 30px from the bottom */
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+#snackbar.show {
+  visibility: visible; /* Show the snackbar */
+  /* Add animation: Take 0.5 seconds to fade in and out the snackbar.
+  However, delay the fade out process for 2.5 seconds */
+  -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+@-webkit-keyframes fadein {
+  from {bottom: 0; opacity: 0;}
+  to {bottom: 30px; opacity: 1;}
+}
+
+@keyframes fadein {
+  from {bottom: 0; opacity: 0;}
+  to {bottom: 30px; opacity: 1;}
+}
+
+@-webkit-keyframes fadeout {
+  from {bottom: 30px; opacity: 1;}
+  to {bottom: 0; opacity: 0;}
+}
+
+@keyframes fadeout {
+  from {bottom: 30px; opacity: 1;}
+  to {bottom: 0; opacity: 0;}
+}
+/*
+@-webkit-keyframes glowing {
+  0% { background-color: #fce703; }
+  50% { background-color: #fce303; }
+  100% { background-color: #fce703; }
+}
+
+@-moz-keyframes glowing {
+  0% { background-color: #fce703; }
+  50% { background-color: #fce303; }
+  100% { background-color: #fce703; }
+}
+
+@-o-keyframes glowing {
+  0% { background-color: #fce703; }
+  50% { background-color: #fce303; }
+  100% { background-color: #fce703; }
+}
+
+@keyframes glowing {
+  0% { background-color: #fce703; }
+  50% { background-color: #fce303; }
+  100% { background-color: #fce703; }
+}
+*/

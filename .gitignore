@@ -179,6 +179,7 @@ buildNumber.properties
 
 # Docker
 /.env
+/.env.prod
 
 # Mosquitto
 /volumes/mosquitto/log/
