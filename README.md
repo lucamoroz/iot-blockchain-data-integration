@@ -65,7 +65,7 @@ dedicated chapter).
   5's [VM Instances](https://console.cloud.google.com/compute/instances?project=iotws2020-group-5-297717)
 * Open a new shell on the `presentation` instance directly in the browser or via gcloud cli tool provided in the
   dropdown ![GCP VM Instances](./docs/img/gcp-vms.png)
-* Redeploy the project by executing `sudo /srv/iot-presentation/deploy.sh`
+* Redeploy the project by executing `/srv/iot-presentation/deploy.sh`
 * The frontend should be accessible from [iotws20.allteams.at](http://iotws20.allteams.at/)
 
 ## Testnet
