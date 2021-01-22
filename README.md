@@ -98,3 +98,6 @@ You can run all docker containers locally with the environment file for developm
 `docker-compose --env-file .env.dev up --build`
 
 or run each sub project directly on your host by checking out the README files there.
+
+## Contributions
+- Luca Moroldo: data-filter
