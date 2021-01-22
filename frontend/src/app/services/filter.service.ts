@@ -2,8 +2,8 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../environments/environment';
 import {Observable} from 'rxjs';
-import {AnemometerFilter} from '../model/anemometer-filter';
-import {MultimeterFilter} from '../model/multimeter-filter';
+import {AnemometerFilter, AnemometerFilterString} from '../model/anemometer-filter';
+import {MultimeterFilter, MultimeterFilterString} from '../model/multimeter-filter';
 import {Comparison} from '../model/comparison';
 
 @Injectable({
@@ -21,6 +21,12 @@ export class FilterService {
       windSpeedConstraint: { value: 5, comparison: Comparison.GREATER_OR_EQUAL}
     }};
   constructor(private http: HttpClient) { }
+  public getAnemometerFilter(): Observable<AnemometerFilterString> {
+    return this.http.get<AnemometerFilterString>(environment.dataFilterAddress + '/filters/anemometer');
+  }
+  public getMultimeterFilter(): Observable<MultimeterFilterString> {
+    return this.http.get<MultimeterFilterString>(environment.dataFilterAddress + '/filters/multimeter/');
+  }
   public sendAnemometerFilter(filter: AnemometerFilter): Observable<any> {
     return this.http.post(environment.dataFilterAddress + '/filters/anemometer', filter);
   }

@@ -4,3 +4,8 @@ export interface NumberConstraint{
   value: number;
   comparison: Comparison;
 }
+
+export interface NumberConstraintString{
+  value: number;
+  comparison: string;
+}

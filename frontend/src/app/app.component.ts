@@ -28,7 +28,9 @@ export class AppComponent implements OnInit, OnDestroy {
   public notifications: string[] = [];
   public adminSelected = true;
   public userSelected = false;
-  public currentFilter: { multiMeter: MultimeterFilter, anemometer: AnemometerFilter } = null;
+  public loadingAnemometer = true;
+  public loadingMultimeter = true;
+  public currentFilter: { multiMeter: MultimeterFilter, anemometer: AnemometerFilter } = { multiMeter: null, anemometer: null };
   private static checkValueAgainstComparor(value: number, otherValue: number, comparor: Comparison): boolean {
     switch (comparor) {
       case Comparison.EQUAL:
@@ -57,13 +59,57 @@ export class AppComponent implements OnInit, OnDestroy {
         return 'equal to ';
     }
   }
-
+  private static getEnumFromString(value: string): Comparison  {
+    switch (value) {
+      case 'LESS':
+        return Comparison.LESS;
+      case 'LESS_OR_EQUAL':
+        return Comparison.LESS_OR_EQUAL;
+      case 'EQUAL':
+        return Comparison.EQUAL;
+      case 'GREATER_OR_EQUAL':
+        return Comparison.GREATER_OR_EQUAL;
+      case 'GREATER':
+        return Comparison.GREATER;
+      default:
+        return Comparison.LESS;
+    }
+  }
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
   }
 
   ngOnInit(): void {
-    this.currentFilter = this.filterService.getFilter();
+    this.subscriptions.add(this.filterService.getAnemometerFilter().subscribe(x => {
+      this.currentFilter.anemometer = {
+        windSpeedConstraint: {
+          value: x.windSpeedConstraint.value,
+          comparison: AppComponent.getEnumFromString(x.windSpeedConstraint.comparison)
+        },
+        windBearingConstraint: {
+          value: x.windBearingConstraint.value,
+          comparison: AppComponent.getEnumFromString(x.windBearingConstraint.comparison)
+        }
+      };
+      this.loadingAnemometer = false;
+    }));
+    this.subscriptions.add(this.filterService.getMultimeterFilter().subscribe(x => {
+      this.currentFilter.multiMeter =  {
+        temperatureConstraint: {
+          value: x.temperatureConstraint.value,
+          comparison: AppComponent.getEnumFromString(x.temperatureConstraint.comparison)
+        },
+        pressureConstraint: {
+          value: x.pressureConstraint.value,
+          comparison: AppComponent.getEnumFromString(x.pressureConstraint.comparison)
+        },
+        humidityConstraint: {
+          value: x.humidityConstraint.value,
+          comparison: AppComponent.getEnumFromString(x.humidityConstraint.comparison)
+        }
+      };
+      this.loadingMultimeter = false;
+    }));
     this.subscriptions.add(
       this.blockChainSubject.subscribe(x => {
         if (x.hasOwnProperty('humidity')) {
