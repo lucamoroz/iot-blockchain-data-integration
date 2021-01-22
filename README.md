@@ -55,8 +55,9 @@ the `make` [tool](https://en.wikipedia.org/wiki/Make_(software))) is provided th
 
 ## How to run in the cloud
 
-The project has also been deployed to a VM on the Google Cloud Platform and can be accessed via http://35.207.109.228/.
-This deployment publishes data to an Ethereum Testnet (see dedicated chapter).
+The project has also been deployed to a VM on the Google Cloud Platform and can be accessed
+via [iotws20.allteams.at](http://iotws20.allteams.at/). This deployment publishes data to an Ethereum Testnet (see
+dedicated chapter).
 
 ## Testnet
 
