@@ -33,6 +33,7 @@ public class MultimeterController {
      *     }
      * }
      */
+    @CrossOrigin
     @GetMapping("")
     MultimeterFilter getMultimeterFilter() {
         // Automatically serialized to JSON
