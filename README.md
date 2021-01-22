@@ -53,6 +53,15 @@ the `make` [tool](https://en.wikipedia.org/wiki/Make_(software))) is provided th
 * `make stop` stops the execution of the project
 * `make purge` stops the project, removes all volumes and deletes the images
 
+
+## How to run the G5B docker-compose file 
+Two things are necessary to run:
+* the .env.prod: which is included in the submission, but not in the repository
+* the fake-sensor/data directory with its content to be mounted into the containers (also included in the submission)
+```
+    docker-compose --env-file .env.prod -f G5B up
+```
+
 ## How to run in the cloud
 
 The project has also been deployed to a VM on the Google Cloud Platform and can be accessed
@@ -89,3 +98,10 @@ You can run all docker containers locally with the environment file for developm
 `docker-compose --env-file .env.dev up --build`
 
 or run each sub project directly on your host by checking out the README files there.
+
+## Contributions
+
+- Luca Moroldo: mainly data-filter (middleware)
+- Konstantin Strümpf: mainly fake-sensors (data provider)
+- David Kirchsteiger: mainly blockchain-publisher (middleware)
+- Samir Duvelek: mainly frontend (user interface)
