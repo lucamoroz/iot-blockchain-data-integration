@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import tuwien.filters.utils.Filter;
 import tuwien.filters.utils.NumberConstraint;
 import tuwien.models.MultimeterRecord;
+import tuwien.filters.utils.Comparison;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -36,9 +37,11 @@ public class MultimeterFilter {
             update(defaultFilter);
 
         } catch (InvalidPathException e) {
-            LOGGER.severe("Couldn't load default multimeter filter, invalid path: " + e.getMessage());
+            LOGGER.severe("Couldn't load multimeter filter, invalid path: " + e.getMessage());
+            loadDefaultFilter();
         } catch (IOException e) {
-            LOGGER.severe("Couldn't load default multimeter filter: " + e.getMessage());
+            LOGGER.severe("Couldn't load multimeter filter: " + e.getMessage());
+            loadDefaultFilter();
         }
     }
 
@@ -65,5 +68,11 @@ public class MultimeterFilter {
         } catch (IOException e) {
             LOGGER.severe("Could save multimeter filter: " + e.getMessage());
         }
+    }
+
+    private void loadDefaultFilter() {
+        this.temperatureConstraint = new NumberConstraint(20, Comparison.GREATER_OR_EQUAL);
+        this.humidityConstraint = new NumberConstraint(0.9, Comparison.LESS_OR_EQUAL);
+        this.pressureConstraint = new NumberConstraint(10, Comparison.GREATER_OR_EQUAL);
     }
 }

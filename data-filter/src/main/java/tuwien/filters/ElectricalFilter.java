@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import tuwien.filters.utils.Filter;
 import tuwien.filters.utils.NumberConstraint;
 import tuwien.models.ElectricalRecord;
+import tuwien.filters.utils.Comparison;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -34,9 +35,11 @@ public class ElectricalFilter {
             update(defaultFilter);
 
         } catch (InvalidPathException e) {
-            LOGGER.severe("Couldn't load default electrical filter, invalid path: " + e.getMessage());
+            LOGGER.severe("Couldn't load electrical filter, invalid path: " + e.getMessage());
+            loadDefaultFilter();
         } catch (IOException e) {
-            LOGGER.severe("Couldn't load default electrical filter: " + e.getMessage());
+            LOGGER.severe("Couldn't load electrical filter: " + e.getMessage());
+            loadDefaultFilter();
         }
     }
 
@@ -58,5 +61,9 @@ public class ElectricalFilter {
         } catch (IOException e) {
             LOGGER.severe("Could save electrical filter: " + e.getMessage());
         }
+    }
+
+    private void loadDefaultFilter() {
+        this.valueConstraint = new NumberConstraint(4, Comparison.GREATER_OR_EQUAL);
     }
 }

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import tuwien.filters.utils.Filter;
 import tuwien.filters.utils.NumberConstraint;
 import tuwien.models.AnemometerRecord;
+import tuwien.filters.utils.Comparison;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -36,9 +37,11 @@ public class AnemometerFilter {
             update(defaultFilter);
 
         } catch (InvalidPathException e) {
-            LOGGER.severe("Couldn't load default anemometer filter, invalid path: " + e.getMessage());
+            LOGGER.severe("Couldn't load anemometer filter, invalid path: " + e.getMessage());
+            loadDefaultFilter();
         } catch (IOException e) {
-            LOGGER.severe("Couldn't load default anemometer filter: " + e.getMessage());
+            LOGGER.severe("Couldn't load anemometer filter: " + e.getMessage());
+            loadDefaultFilter();
         }
     }
 
@@ -63,5 +66,10 @@ public class AnemometerFilter {
         } catch (IOException e) {
             LOGGER.severe("Could save anemometer filter: " + e.getMessage());
         }
+    }
+
+    private void loadDefaultFilter() {
+        this.windSpeedConstraint = new NumberConstraint(10, Comparison.GREATER_OR_EQUAL);
+        this.windBearingConstraint = new NumberConstraint(300, Comparison.GREATER_OR_EQUAL);
     }
 }
