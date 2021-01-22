@@ -59,6 +59,15 @@ The project has also been deployed to a VM on the Google Cloud Platform and can 
 via [iotws20.allteams.at](http://iotws20.allteams.at/). This deployment publishes data to an Ethereum Testnet (see
 dedicated chapter).
 
+### For manual deployment
+
+* Log into Google Cloud Console and navigate to the project IOTWS2020 Group
+  5's [VM Instances](https://console.cloud.google.com/compute/instances?project=iotws2020-group-5-297717)
+* Open a new shell on the `presentation` instance directly in the browser or via gcloud cli tool provided in the
+  dropdown ![GCP VM Instances](./docs/img/gcp-vms.png)
+* Redeploy the project by executing `sudo /srv/iot-presentation/deploy.sh`
+* The frontend should be accessible from [iotws20.allteams.at](http://iotws20.allteams.at/)
+
 ## Testnet
 
 As a testnet we decided for [Kovan](https://kovan-testnet.github.io/website/), since it has the least block time (
