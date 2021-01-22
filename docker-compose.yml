@@ -104,7 +104,9 @@ services:
 
   # MQTT Broker
   message-broker:
-    image: eclipse-mosquitto
+    build:
+      context: ./custom-broker
+      dockerfile: ./Dockerfile
     networks:
       - default
     expose:
