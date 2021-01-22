@@ -1,6 +1,19 @@
 version: '3'
 services:
 
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: ./Dockerfile
+      args:
+        configuration: ''
+    depends_on:
+      - data-filter
+    ports:
+      - 8080:80
+    expose:
+      - 8080
+
   # A demo fake sensor (Anemometer)
   fake-anemometer:
     build:

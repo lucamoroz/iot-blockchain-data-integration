@@ -1,11 +1,11 @@
 start:
-	docker-compose build && docker-compose up -d
+	docker-compose build && docker-compose --env-file .env.dev up -d
 
-restart:
-	docker-compose restart
+start-logs:
+	docker-compose build && docker-compose --env-file .env.dev up
 
-build:
-	docker-compose build
+stop:
+	docker-compose down
 
 purge:
 	docker-compose down -v --rmi all --remove-orphans
