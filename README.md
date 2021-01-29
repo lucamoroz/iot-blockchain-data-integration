@@ -4,13 +4,13 @@ Project Topic B – Blockchain-based Sensor Data Integration
 
 ## Team
 
-Samir Duvelek (01426832)
+Samir Duvelek
 
-David Kirchsteiger (01402259)
+David Kirchsteiger
 
-Luca Moroldo (12016307)
+Luca Moroldo
 
-Konstantin Strümpf (01526204)
+Konstantin Strümpf
 
 ## Overview
 
