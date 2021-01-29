@@ -1,0 +1,121 @@
+version: '3'
+services:
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: ./Dockerfile
+      args:
+        configuration: ''
+    depends_on:
+      - data-filter
+    ports:
+      - 8080:80
+    expose:
+      - 8080
+
+  # A demo fake sensor (Anemometer)
+  fake-anemometer:
+    build:
+      context: ./fake-sensor
+      dockerfile: ./Dockerfile
+    environment:
+      - HOST=message-broker
+      - PORT=1883
+      - TOPIC=/homea/anemometer
+      - REPLAY_SPEED=360.0
+      - COLUMNS=windSpeed windBearing
+      - KEEP_CONNECTION=5
+      - CLIENT_ID=anemometer-1
+      - FILES=./data/HomeA/homeA2014.csv ./data/HomeA/homeA2015.csv ./data/HomeA/homeA2016.csv
+    volumes:
+      - ./fake-sensor/data:/app/data
+    depends_on:
+      - message-broker
+
+  # A demo fake sensor (Anemometer)
+  fake-multimeter:
+    build:
+      context: ./fake-sensor
+      dockerfile: ./Dockerfile
+    environment:
+      - HOST=message-broker
+      - PORT=1883
+      - TOPIC=/homea/multimeter
+      - REPLAY_SPEED=360.0
+      - COLUMNS=temperature humidity pressure
+      - KEEP_CONNECTION=5
+      - CLIENT_ID=multimeter-1
+      - FILES=./data/HomeA/homeA2014.csv ./data/HomeA/homeA2015.csv ./data/HomeA/homeA2016.csv
+    volumes:
+      - ./fake-sensor/data:/app/data
+    depends_on:
+      - message-broker
+
+  # Data Filter
+  data-filter:
+    build:
+      context: ./data-filter
+      dockerfile: ./Dockerfile
+    environment:
+      - MQTT_HOST=message-broker
+      - MQTT_ANEMOMETER_TOPIC=/+/anemometer
+      - MQTT_ANEMOMETER_FILTERED_TOPIC=filtered
+      - MQTT_MULTIMETER_TOPIC=/+/multimeter
+      - MQTT_MULTIMETER_FILTERED_TOPIC=filtered
+      - MQTT_ELECTRICAL_TOPIC=/+/electrical
+      - MQTT_ELECTRICAL_FILTERED_TOPIC=filtered
+      - BLOCKCHAIN_HOST_WS=ws://127.0.0.1:8545
+      - BLOCKCHAIN_HOST_HTTP=http://127.0.0.1:8545
+      - BLOCKCHAIN_CONTRACT_ADDRESS=0x491Db2723d96a763B554226CB510781b3bB5a8d0  # Due to ganache mnemonic it should stay the say
+      - BLOCKCHAIN_ACCOUNT_PRIVATE_KEY=$ACCOUNT_PRIVATE_KEY # same here
+    networks:
+      - default
+    ports:
+      - "80:8080"
+    volumes:
+      - ./data-filter/filters:/app/filters
+
+  # Transfer MQTT to blockchain
+  blockchain-publisher:
+    build:
+      context: ./blockchain-publisher
+    command: ./wait-for-it.sh $BLOCKCHAIN_HOST --
+      ./wait-for-it.sh message-broker:1883 --
+      python -u src/blockchain_publisher.py
+      --mqtt-host message-broker
+      --mqtt-port 1883
+      --blockchain-host "$BLOCKCHAIN_HOST"
+      --topic filtered
+      --contract-sol-path $CONTRACT_SOL_PATH
+      --account-private-key $ACCOUNT_PRIVATE_KEY
+    depends_on:
+      - message-broker
+      - ganache
+
+  # Ethereum blockchain
+  ganache:
+    image: trufflesuite/ganache-cli
+    command: --mnemonic diamond smart face permit sock element exclude loan december
+    expose:
+      - 8545
+    ports:
+      - 8545:8545
+
+  # MQTT Broker
+  message-broker:
+    build:
+      context: ./custom-broker
+      dockerfile: ./Dockerfile
+    networks:
+      - default
+    expose:
+      - "1883"
+      - "9001"
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./volumes/mosquitto/config:/mosquitto/config
+      - ./volumes/mosquitto/data:/mosquitto/data
+      - ./volumes/mosquitto/log:/mosquitto/log

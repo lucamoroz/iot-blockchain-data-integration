@@ -1,0 +1,38 @@
+.filter-wrapper{
+  border: 2px solid black;
+  min-width: 20em;
+  margin: 0 0.5em;
+  padding: 0.75em;
+  max-height: 50em;
+}
+
+.filter-section + .filter-section{
+  margin-top: 1.5em;
+}
+
+.explain{
+  font-size: 14px;
+  font-family: Arial, Helvetica, sans-serif;
+  padding: 0.25em 0 1em 0;
+}
+
+.apply-filter-wrapper{
+  padding-bottom: 1em;
+}
+
+.apply-filter-button {
+  background-color: #5a96bf;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 0.5em 1.5em;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+
+.select-container{
+  padding: 1em 0 0.5em 0;
+}
+

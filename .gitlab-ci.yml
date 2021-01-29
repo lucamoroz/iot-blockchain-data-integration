@@ -1,0 +1,42 @@
+stages:
+  - build
+
+build-fake-sensors:
+  image: docker:latest
+  stage: build
+  script:
+    - echo "Building Fake Sensor Image"
+    - docker build -t iotssg5ws2020/fake-sensor:$CI_COMMIT_REF_SLUG ./fake-sensor
+    - docker push iotssg5ws2020/fake-sensor:$CI_COMMIT_REF_SLUG
+
+build-data-filter:
+  image: docker:latest
+  stage: build
+  script:
+    - echo "Building Data Filter Image"
+    - docker build -t iotssg5ws2020/data-filter:$CI_COMMIT_REF_SLUG ./data-filter
+    - docker push iotssg5ws2020/data-filter:$CI_COMMIT_REF_SLUG
+
+build-blockchain-publisher:
+  image: docker:latest
+  stage: build
+  script:
+    - echo "Building Blockchain Publisher Image"
+    - docker build -t iotssg5ws2020/blockchain-publisher:$CI_COMMIT_REF_SLUG ./blockchain-publisher
+    - docker push iotssg5ws2020/blockchain-publisher:$CI_COMMIT_REF_SLUG
+
+build-frontend:
+  image: docker:latest
+  stage: build
+  script:
+    - echo "Building Frontend Image"
+    - docker build -t iotssg5ws2020/frontend:$CI_COMMIT_REF_SLUG ./frontend
+    - docker push iotssg5ws2020/frontend:$CI_COMMIT_REF_SLUG
+
+custom-broker:
+  image: docker:latest
+  stage: build
+  script:
+    - echo "Building Message Broker with config on board"
+    - docker build -t iotssg5ws2020/broker:$CI_COMMIT_REF_SLUG ./custom-broker
+    - docker push iotssg5ws2020/broker:$CI_COMMIT_REF_SLUG
