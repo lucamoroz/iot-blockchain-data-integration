@@ -1,16 +1,17 @@
-# Internet of Things for Smart Systems WS 2020 - Group 5 Topic B
+# Blockchain-based Sensor Data Integration
 
-Project Topic B – Blockchain-based Sensor Data Integration
+
+For a description of the project, please refer to Assignment.pdf.
 
 ## Team
 
-Samir Duvelek (01426832)
+Samir Duvelek
 
-David Kirchsteiger (01402259)
+David Kirchsteiger
 
-Luca Moroldo (12016307)
+Luca Moroldo
 
-Konstantin Strümpf (01526204)
+Konstantin Strümpf
 
 ## Overview
 
