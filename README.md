@@ -1,7 +1,15 @@
 # Blockchain-based Sensor Data Integration
 
+## Overview
 
-For a description of the project, please refer to Assignment.pdf.
+This project simulates readings from multiple sensors (temperature, humidity, air pressure, wind speed, etc.) and stores
+relevant values in a blockchain. A user can sett multiple filters in a dashboard in order to change what data is
+relevant and stored permanently. This could for example be used by an insurance company for only permanently storing
+data from days with extreme weather conditions in order to be able to understand later which services are to be
+reimbursed.
+
+
+For a more detailed description of the project, please refer to Assignment.pdf.
 
 ## Team
 
@@ -12,14 +20,6 @@ David Kirchsteiger
 Luca Moroldo
 
 Konstantin Strümpf
-
-## Overview
-
-This project simulates readings from multiple sensors (temperature, humidity, air pressure, wind speed, etc.) and stores
-relevant values in a blockchain. A user can sett multiple filters in a dashboard in order to change what data is
-relevant and stored permanently. This could for example be used by an insurance company for only permanently storing
-data from days with extreme weather conditions in order to be able to understand later which services are to be
-reimbursed.
 
 ## Architecture
 
